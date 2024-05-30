@@ -11,8 +11,8 @@ import {
   varchar,
   text,
   integer,
-  type AnyPgColumn,
 } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -42,7 +42,13 @@ export const users = createTable(
   }),
 );
 
-export type User = typeof users.$inferSelect;
+export const userProductRelations = relations(users, ({ many }) => ({
+  products: many(products),
+}));
+
+export const apiUser = createInsertSchema(users, {});
+
+export const apiCreateUser = apiUser.omit({ id: true });
 
 export const products = createTable(
   "products",
@@ -56,45 +62,19 @@ export const products = createTable(
       .notNull(),
     updatedAt: timestamp("updatedAt", { withTimezone: true }),
     owner: integer("owner").references(() => users.id),
-    admin: integer("admin")
-      .references(() => users.id)
-      .array(),
-    organizationUnits: integer("organizationUnits")
-      .references(() => organizationUnits.id)
-      .array(),
   },
   (example) => ({
     nameIndex: index("name_idx").on(example.name),
   }),
 );
 
-export const organizationUnits = createTable(
-  "organizationUnits",
-  {
-    id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
-    parent: integer("parent").references(
-      (): AnyPgColumn => organizationUnits.id,
-    ),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updatedAt", { withTimezone: true }),
-  },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
+export const productAdminRelations = relations(products, ({ one, many }) => ({
+  owner: one(users, {
+    fields: [products.owner],
+    references: [users.id],
   }),
-);
-
-export const organizationUnitRelations = relations(
-  organizationUnits,
-  ({ one }) => ({
-    underlying: one(organizationUnits, {
-      fields: [organizationUnits.parent],
-      references: [organizationUnits.id],
-    }),
-  }),
-);
+  admins: many(users),
+}));
 
 export const blogPosts = createTable(
   "blogPosts",
@@ -113,3 +93,14 @@ export const blogPosts = createTable(
     authorIndex: index("author_idx").on(example.author),
   }),
 );
+
+export const blogUserRelations = relations(blogPosts, ({ one }) => ({
+  author: one(users, {
+    fields: [blogPosts.author],
+    references: [users.id],
+  }),
+}));
+
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
+export type Product = typeof products.$inferSelect;
