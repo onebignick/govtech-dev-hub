@@ -1,7 +1,11 @@
-export default async function Home() {
+import Shell from "./_components/shell";
 
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-    </main>
-  );
+export const metadata = {
+  title: "One GT Hub",
+  description: "Bringing us to One GovTech",
+  icons: [{ rel: "icon", url: "/favicon.ico" }],
+};
+
+export default async function Home() {
+  return <Shell page={<p>Test</p>} />;
 }
