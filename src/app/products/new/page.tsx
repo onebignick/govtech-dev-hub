@@ -1,6 +1,6 @@
 "use client";
 
-import Shell from "@frontend/_components/shell";
+import Shell, { navLinks } from "@frontend/_components/shell";
 import {
   Stack,
   Title,
@@ -9,30 +9,47 @@ import {
   TextInput,
   FileInput,
   NativeSelect,
+  Textarea,
 } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { IconFile } from "@tabler/icons-react";
 import { Editor } from "~/app/_components/editor";
+import { api } from "~/trpc/react";
 
 export default function CreateNewProduct() {
+  const utils = api.useUtils();
+  const createProductMutation = api.product.create.useMutation({
+    onSuccess() {
+      utils.product.invalidate().catch((error) => console.log(error));
+    },
+  });
+
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
       name: "",
+      summary: "",
       type: "product",
-      termsOfService: false,
       content: "",
     },
 
     validate: {
+      type: isNotEmpty("Type is required"),
       name: isNotEmpty("Name is required"),
+      summary: isNotEmpty("Summary is required"),
+      content: isNotEmpty("Content is required"),
     },
   });
 
   return (
     <Shell
+      backLink={navLinks.products}
       page={
-        <form onSubmit={form.onSubmit((values) => console.log(values))}>
+        <form
+          onSubmit={form.onSubmit((values) => {
+            createProductMutation.mutate(values);
+          })}
+        >
           <Stack>
             <Title order={1}>Create New</Title>
             <NativeSelect
@@ -59,6 +76,14 @@ export default function CreateNewProduct() {
               leftSection={<IconFile />}
               label="Logo"
               placeholder="Click to upload file"
+            />
+            <Textarea
+              withAsterisk
+              label="Summary"
+              description="Quick summary to be displayed on the Products page"
+              placeholder="SHIP-HATS is a suite of products for GovTech"
+              key={form.key("summary")}
+              {...form.getInputProps("summary")}
             />
             <Editor
               withAsterisk

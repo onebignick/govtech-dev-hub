@@ -12,7 +12,7 @@ import {
   text,
   integer,
 } from "drizzle-orm/pg-core";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { createInsertSchema } from "drizzle-zod";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -72,6 +72,14 @@ export const products = createTable(
     nameIndex: index("product_name_idx").on(example.name),
   }),
 );
+
+export const apiProduct = createInsertSchema(products, {});
+
+export const apiCreateProduct = apiProduct.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
 
 export const productAdminRelations = relations(products, ({ one, many }) => ({
   owner: one(users, {

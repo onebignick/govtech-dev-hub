@@ -1,23 +1,14 @@
 "use client";
 
-import {
-  AppShell,
-  Box,
-  Burger,
-  Button,
-  Center,
-  Group,
-  Stack,
-} from "@mantine/core";
+import { AppShell, Box, Burger, Button, Group } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import Head from "next/head";
 import NextImage from "next/image";
 import { Image } from "@mantine/core";
 import logo from "public/logo.webp";
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { subtle } from "crypto";
 import { IconChevronLeft } from "@tabler/icons-react";
+import React from "react";
 
 interface ShellProps {
   page: ReactNode;
@@ -27,10 +18,17 @@ interface ShellProps {
 interface Link {
   title: string;
   link: string;
+  inNavbar?: boolean;
 }
 
 export const navLinks = {
-  admin: { title: "Admin", link: "/admin" },
+  admin: { title: "Admin", link: "/admin", inNavbar: true },
+  products: { title: "Products", link: "/products", inNavbar: true },
+  createProducts: {
+    title: "Create Product",
+    link: "/products/new",
+    inNavbar: false,
+  },
 };
 
 export default function Shell({ page, backLink }: ShellProps) {
@@ -52,11 +50,15 @@ export default function Shell({ page, backLink }: ShellProps) {
               pl="md"
             />
           </Link>
-          {Array.from(Object.values(navLinks)).map((link) => (
-            <Link href={link.link} key={link.title}>
-              <Button variant="subtle">{link.title}</Button>
-            </Link>
-          ))}
+          <Group>
+            {Array.from(Object.values(navLinks))
+              .filter((link) => link.inNavbar)
+              .map((link) => (
+                <Link href={link.link} key={link.title}>
+                  <Button variant="subtle">{link.title}</Button>
+                </Link>
+              ))}
+          </Group>
         </Group>
       </AppShell.Header>
       <AppShell.Main bg="var(--mantine-color-body)">

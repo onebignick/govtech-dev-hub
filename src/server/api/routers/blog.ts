@@ -2,12 +2,16 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { apiCreateProduct, products } from "~/server/db/schema";
 
 export const productRouter = createTRPCRouter({
-  get: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.select().from(products);
-  }),
   create: publicProcedure
     .input(apiCreateProduct)
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.insert(products).values(input).returning();
+      await ctx.db.insert(products).values({
+        name: input.name,
+      });
     }),
+  getLatest: publicProcedure.query(({ ctx }) => {
+    return ctx.db.query.products.findFirst({
+      orderBy: (posts, { desc }) => [desc(posts.createdAt)],
+    });
+  }),
 });

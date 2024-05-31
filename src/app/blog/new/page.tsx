@@ -13,26 +13,39 @@ import {
 import { isNotEmpty, useForm } from "@mantine/form";
 import { IconFile } from "@tabler/icons-react";
 import { Editor } from "~/app/_components/editor";
+import { api } from "~/trpc/react";
 
 export default function CreateNewProduct() {
+  const utils = api.useUtils();
+  const createProductMutation = api.product.create.useMutation({
+    onSuccess() {
+      utils.product.invalidate().catch((error) => console.log(error));
+    },
+  });
+
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
       name: "",
       type: "product",
-      termsOfService: false,
       content: "",
     },
 
     validate: {
+      type: isNotEmpty("Type is required"),
       name: isNotEmpty("Name is required"),
+      content: isNotEmpty("Content is required"),
     },
   });
 
   return (
     <Shell
       page={
-        <form onSubmit={form.onSubmit((values) => console.log(values))}>
+        <form
+          onSubmit={form.onSubmit((values) => {
+            createProductMutation.mutate(values);
+          })}
+        >
           <Stack>
             <Title order={1}>Create New</Title>
             <NativeSelect

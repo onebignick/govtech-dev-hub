@@ -1,3 +1,5 @@
+"use client";
+
 import Shell from "@frontend/_components/shell";
 
 export const metadata = {
@@ -6,6 +8,6 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default async function Home() {
+export default function Home() {
   return <Shell page={<p>Test</p>} />;
 }
