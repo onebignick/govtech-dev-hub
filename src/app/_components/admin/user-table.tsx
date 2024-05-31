@@ -18,7 +18,18 @@ const typeColors: Record<string, string> = {
 };
 
 export function UsersTable() {
+  const utils = api.useUtils();
   const users = api.user.get.useQuery();
+  const deleteUserMutation = api.user.deleteUser.useMutation({
+    onSuccess() {
+      utils.user.invalidate().catch((error) => console.log(error));
+    },
+  });
+
+  const deleteUser = (email: string) => {
+    deleteUserMutation.mutate({ email });
+    users.refetch().catch((error) => console.log(error));
+  };
 
   if (!users.data) {
     return <div>Loading...</div>;
@@ -56,7 +67,11 @@ export function UsersTable() {
               stroke={1.5}
             />
           </ActionIcon>
-          <ActionIcon variant="subtle" color="red">
+          <ActionIcon
+            variant="subtle"
+            color="red"
+            onClick={() => deleteUser(user.email)}
+          >
             <IconTrash
               style={{ width: rem(16), height: rem(16) }}
               stroke={1.5}
@@ -75,7 +90,7 @@ export function UsersTable() {
             <Table.Th>Employee</Table.Th>
             <Table.Th>Type</Table.Th>
             <Table.Th>Email</Table.Th>
-            <Table.Th>Phone</Table.Th>
+            <Table.Th>Role</Table.Th>
             <Table.Th />
           </Table.Tr>
         </Table.Thead>

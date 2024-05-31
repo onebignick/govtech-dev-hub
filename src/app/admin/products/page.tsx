@@ -6,12 +6,7 @@ import { api } from "~/trpc/react";
 import { UsersTable } from "@frontend/_components/admin/user-table";
 
 export default function Admin() {
-  const utils = api.useUtils();
-  const createUserMutation = api.user.createUser.useMutation({
-    onSuccess() {
-      utils.user.invalidate().catch((error) => console.log(error));
-    },
-  });
+  const createUserMutation = api.user.createUser.useMutation();
 
   const handleCreate = () => {
     createUserMutation.mutate({
@@ -24,7 +19,7 @@ export default function Admin() {
     <Shell
       page={
         <Stack>
-          <Title order={1}>Users</Title>
+          <Title order={1}>Products</Title>
           <Button onClick={handleCreate}>Generate Data</Button>
           <UsersTable />
         </Stack>

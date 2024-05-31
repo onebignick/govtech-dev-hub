@@ -1,9 +1,7 @@
 "use client";
 
 import { Button, Stack } from "@mantine/core";
-import Shell from "../_components/shell";
-import { api } from "~/trpc/react";
-import { UsersTable } from "../_components/admin/user-table";
+import Shell from "@frontend/_components/shell";
 import Link from "next/link";
 
 export default function Admin() {
