@@ -28,17 +28,17 @@ export const users = createTable(
   "user",
   {
     id: serial("id").primaryKey(),
-    email: varchar("email", { length: 256 }).unique(),
-    name: varchar("name", { length: 256 }),
-    type: userTypeEnum("userType"),
+    email: varchar("email", { length: 256 }).notNull().unique(),
+    name: varchar("name", { length: 256 }).notNull(),
+    type: userTypeEnum("userType").default("user").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt", { withTimezone: true }),
   },
   (example) => ({
-    nameIndex: index("name_idx").on(example.name),
-    emailIndex: index("email_idx").on(example.email),
+    nameIndex: index("user_name_idx").on(example.name),
+    emailIndex: index("user_email_idx").on(example.email),
   }),
 );
 
@@ -48,7 +48,12 @@ export const userProductRelations = relations(users, ({ many }) => ({
 
 export const apiUser = createInsertSchema(users, {});
 
-export const apiCreateUser = apiUser.omit({ id: true });
+export const apiCreateUser = apiUser.omit({
+  id: true,
+  type: true,
+  createdAt: true,
+  updatedAt: true,
+});
 
 export const products = createTable(
   "products",
@@ -64,7 +69,7 @@ export const products = createTable(
     owner: integer("owner").references(() => users.id),
   },
   (example) => ({
-    nameIndex: index("name_idx").on(example.name),
+    nameIndex: index("product_name_idx").on(example.name),
   }),
 );
 
@@ -89,8 +94,8 @@ export const blogPosts = createTable(
     updatedAt: timestamp("updatedAt", { withTimezone: true }),
   },
   (example) => ({
-    titleIndex: index("title_idx").on(example.title),
-    authorIndex: index("author_idx").on(example.author),
+    titleIndex: index("blog_post_title_idx").on(example.title),
+    authorIndex: index("blog_post_author_idx").on(example.author),
   }),
 );
 
