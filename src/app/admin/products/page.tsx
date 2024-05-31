@@ -1,9 +1,10 @@
 "use client";
 
 import { Button, Stack, Title } from "@mantine/core";
-import Shell from "@frontend/_components/shell";
+import Shell, { navLinks } from "@frontend/_components/shell";
 import { api } from "~/trpc/react";
 import { UsersTable } from "@frontend/_components/admin/user-table";
+import Link from "next/link";
 
 export default function Admin() {
   const createUserMutation = api.user.createUser.useMutation();
@@ -17,10 +18,13 @@ export default function Admin() {
 
   return (
     <Shell
+      backLink={navLinks.admin}
       page={
         <Stack>
-          <Title order={1}>Products</Title>
-          <Button onClick={handleCreate}>Generate Data</Button>
+          <Title order={1}>Product Management</Title>
+          <Button component={Link} href="/products/new">
+            Create New
+          </Button>
           <UsersTable />
         </Stack>
       }

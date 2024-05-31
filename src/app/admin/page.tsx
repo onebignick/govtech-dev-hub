@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Stack } from "@mantine/core";
+import { Button, Stack, Title } from "@mantine/core";
 import Shell from "@frontend/_components/shell";
 import Link from "next/link";
 
@@ -9,9 +9,13 @@ export default function Admin() {
     <Shell
       page={
         <Stack>
-          <Link href="./admin/users">
-            <Button>Users</Button>
-          </Link>
+          <Title order={1}>Admin Panel</Title>
+          <Button component={Link} href="/admin/users">
+            Users
+          </Button>
+          <Button component={Link} href="/admin/products">
+            Products
+          </Button>
         </Stack>
       }
     />
