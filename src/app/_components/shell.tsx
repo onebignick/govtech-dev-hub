@@ -21,8 +21,13 @@ interface Link {
   inNavbar?: boolean;
 }
 
-export const navLinks = {
+export const navLinks: Record<string, Link> = {
   admin: { title: "Admin", link: "/admin", inNavbar: true },
+  manageProducts: {
+    title: "Manage Products",
+    link: "/admin/products",
+    inNavbar: false,
+  },
   products: { title: "Products", link: "/products", inNavbar: true },
   createProducts: {
     title: "Create Product",

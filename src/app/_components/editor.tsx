@@ -49,6 +49,7 @@ export function Editor({
       SubScript,
       Highlight,
     ],
+    content: _value,
     onUpdate({ editor }) {
       const content = editor.getHTML();
       handleChange(content);
@@ -62,7 +63,7 @@ export function Editor({
       description={description}
       error={error}
     >
-      <RichTextEditor editor={editor} content={_value} {...others}>
+      <RichTextEditor editor={editor} {...others}>
         <RichTextEditor.Toolbar sticky stickyOffset={60}>
           <RichTextEditor.ControlsGroup>
             <RichTextEditor.Bold />

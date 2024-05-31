@@ -23,11 +23,16 @@ import { createInsertSchema } from "drizzle-zod";
 export const createTable = pgTableCreator((name) => `govtech-dev-hub_${name}`);
 
 export const userTypeEnum = pgEnum("userType", ["user", "admin", "superadmin"]);
+export const productTypeEnum = pgEnum("productType", [
+  "product",
+  "agencyproject",
+  "innersource",
+]);
 
 export const users = createTable(
   "user",
   {
-    id: serial("id").primaryKey(),
+    id: serial("id").notNull().primaryKey(),
     email: varchar("email", { length: 256 }).notNull().unique(),
     name: varchar("name", { length: 256 }).notNull(),
     type: userTypeEnum("userType").default("user").notNull(),
@@ -58,10 +63,11 @@ export const apiCreateUser = apiUser.omit({
 export const products = createTable(
   "products",
   {
-    id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
-    summary: text("summary"),
-    content: text("content"),
+    id: serial("id").notNull().primaryKey(),
+    name: varchar("name", { length: 256 }).notNull(),
+    summary: text("summary").notNull(),
+    content: text("content").notNull(),
+    type: productTypeEnum("productType").default("product").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
