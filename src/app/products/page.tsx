@@ -4,7 +4,7 @@ import Shell, { navLinks } from "@frontend/_components/shell";
 import { Button, Group, Stack, Title } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import Link from "next/link";
-import { ProductCardsGrid } from "../_components/products/product-cards-grid";
+import { ProductCardsGrid } from "@frontend/_components/products/product-cards-grid";
 
 export default function Products() {
   return (
@@ -15,7 +15,7 @@ export default function Products() {
             <Title order={1}>GovTech Products</Title>
             <Button
               component={Link}
-              href={navLinks.createProducts.link}
+              href={navLinks.createProducts!.link}
               leftSection={<IconPlus />}
             >
               Create
