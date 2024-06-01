@@ -9,6 +9,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { IconChevronLeft } from "@tabler/icons-react";
 import React from "react";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 interface ShellProps {
   page: ReactNode;
@@ -56,13 +57,19 @@ export default function Shell({ page, backLink }: ShellProps) {
             />
           </Link>
           <Group>
-            {Array.from(Object.values(navLinks))
-              .filter((link) => link.inNavbar)
-              .map((link) => (
-                <Link href={link.link} key={link.title}>
-                  <Button variant="subtle">{link.title}</Button>
-                </Link>
-              ))}
+            <SignedOut>
+              <SignInButton/>
+            </SignedOut>
+            <SignedIn>
+              {Array.from(Object.values(navLinks))
+                .filter((link) => link.inNavbar)
+                .map((link) => (
+                  <Link href={link.link} key={link.title}>
+                    <Button variant="subtle">{link.title}</Button>
+                  </Link>
+                ))}
+                <UserButton/>
+            </SignedIn>
           </Group>
         </Group>
       </AppShell.Header>

@@ -1,5 +1,3 @@
-"use client";
-
 import Shell from "@frontend/_components/shell";
 
 export const metadata = {
