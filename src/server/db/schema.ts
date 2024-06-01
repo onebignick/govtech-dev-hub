@@ -11,8 +11,10 @@ import {
   varchar,
   text,
   integer,
+  json,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -28,6 +30,23 @@ export const productTypeEnum = pgEnum("productType", [
   "agencyproject",
   "innersource",
 ]);
+const quarters = [
+  "2023 Q1",
+  "2023 Q2",
+  "2023 Q3",
+  "2023 Q4",
+  "2024 Q1",
+  "2024 Q2",
+  "2024 Q3",
+  "2024 Q4",
+  "2025 Q1",
+  "2025 Q2",
+  "2025 Q3",
+  "2025 Q4",
+] as const;
+export type Quarter = (typeof quarters)[number];
+
+export const quarterEnum = pgEnum("quarters", quarters);
 
 export const users = createTable(
   "user",
@@ -60,19 +79,30 @@ export const apiCreateUser = apiUser.omit({
   updatedAt: true,
 });
 
+const highlight = z.object({
+  quarter: z.string(),
+  points: z.string().array(),
+});
+
 export const products = createTable(
   "products",
   {
-    id: serial("id").notNull().primaryKey(),
+    id: text("id").unique().primaryKey(),
     name: varchar("name", { length: 256 }).notNull(),
     summary: text("summary").notNull(),
-    content: text("content").notNull(),
+    keyfeatures: json("keyfeatures")
+      .$type<{ title: string; description: string }[]>()
+      .default([]),
+    highlights: json("highlights")
+      .$type<z.infer<typeof highlight>[]>()
+      .default([]),
+    links: json("links").$type<{ title: string; url: string }[]>().default([]),
     type: productTypeEnum("productType").default("product").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt", { withTimezone: true }),
-    owner: integer("owner").references(() => users.id),
+    admins: text("admins").notNull(),
   },
   (example) => ({
     nameIndex: index("product_name_idx").on(example.name),
@@ -82,18 +112,11 @@ export const products = createTable(
 export const apiProduct = createInsertSchema(products, {});
 
 export const apiCreateProduct = apiProduct.omit({
-  id: true,
   createdAt: true,
   updatedAt: true,
 });
 
-export const productAdminRelations = relations(products, ({ one, many }) => ({
-  owner: one(users, {
-    fields: [products.owner],
-    references: [users.id],
-  }),
-  admins: many(users),
-}));
+export type apiCreateProductType = z.infer<typeof apiCreateProduct>;
 
 export const blogPosts = createTable(
   "blogPosts",

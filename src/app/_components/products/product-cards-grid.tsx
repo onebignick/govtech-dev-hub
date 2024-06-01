@@ -2,6 +2,7 @@ import { Text, SimpleGrid, Paper } from "@mantine/core";
 import Link from "next/link";
 import { api } from "~/trpc/react";
 import { navLinks } from "../shell";
+import classes from "@css/cursor.module.css";
 
 export function ProductCardsGrid() {
   const products = api.product.get.useQuery();
@@ -15,6 +16,7 @@ export function ProductCardsGrid() {
       component={Link}
       href={`${navLinks.products?.link}/${product.id}`}
       key={product.id}
+      className={classes.hover}
       shadow="xs"
       p="xl"
     >

@@ -35,6 +35,7 @@ export const navLinks: Record<string, Link> = {
     link: "/products/new",
     inNavbar: false,
   },
+  blog: { title: "Blog", link: "/blog", inNavbar: true },
 };
 
 export default function Shell({ page, backLink }: ShellProps) {
@@ -58,7 +59,7 @@ export default function Shell({ page, backLink }: ShellProps) {
           </Link>
           <Group>
             <SignedOut>
-              <SignInButton/>
+              <SignInButton />
             </SignedOut>
             <SignedIn>
               {Array.from(Object.values(navLinks))
@@ -68,7 +69,7 @@ export default function Shell({ page, backLink }: ShellProps) {
                     <Button variant="subtle">{link.title}</Button>
                   </Link>
                 ))}
-                <UserButton/>
+              <UserButton />
             </SignedIn>
           </Group>
         </Group>

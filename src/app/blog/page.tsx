@@ -1,11 +1,27 @@
-import Shell from "@frontend/_components/shell";
+"use client";
 
-export const metadata = {
-  title: "One GT Hub",
-  description: "Bringing us to One GovTech",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
-};
+import Shell, { navLinks } from "@frontend/_components/shell";
+import { Button, Group, Stack, Title } from "@mantine/core";
+import { IconPencil, IconPlus } from "@tabler/icons-react";
+import Link from "next/link";
 
-export default async function Home() {
-  return <Shell page={<p>Test</p>} />;
+export default function BlogPosts() {
+  return (
+    <Shell
+      page={
+        <Stack>
+          <Group justify="space-between">
+            <Title order={1}>Dev Blog</Title>
+            <Button
+              component={Link}
+              href={navLinks.createProducts!.link}
+              leftSection={<IconPencil />}
+            >
+              New Post
+            </Button>
+          </Group>
+        </Stack>
+      }
+    />
+  );
 }

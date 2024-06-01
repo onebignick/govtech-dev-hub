@@ -13,7 +13,7 @@ export default function AdminEditProduct({
 }) {
   const utils = api.useUtils();
   const productRes = api.product.getProduct.useQuery({
-    id: parseInt(params.productID),
+    id: params.productID,
   });
   const editProductMutation = api.product.update.useMutation({
     onSuccess() {

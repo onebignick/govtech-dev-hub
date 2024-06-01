@@ -8,7 +8,7 @@ export const productRouter = createTRPCRouter({
     return await ctx.db.select().from(products);
   }),
   getProduct: publicProcedure
-    .input(z.object({ id: z.number() }))
+    .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       return await ctx.db
         .select()
