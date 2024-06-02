@@ -1,11 +1,11 @@
 import { Text, SimpleGrid, Paper } from "@mantine/core";
 import Link from "next/link";
-import { api } from "~/trpc/react";
 import { navLinks } from "../shell";
-import classes from "@css/cursor.module.css";
+import classes from "~/styles/cursor.module.css";
+import { api } from "~/trpc/react";
 
 export function ProductCardsGrid() {
-  const products = api.product.get.useQuery();
+  const products = api.product.getAll.useQuery();
 
   if (!products.data) {
     return <div>Loading...</div>;
@@ -23,7 +23,6 @@ export function ProductCardsGrid() {
       <Text size="xl" fw="bold">
         {product.name}
       </Text>
-      <Text>{product.summary}</Text>
     </Paper>
   ));
 

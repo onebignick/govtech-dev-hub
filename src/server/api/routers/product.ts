@@ -1,38 +1,46 @@
-import { eq } from "drizzle-orm";
+import { type Prisma } from "@prisma/client";
 import { z } from "zod";
+
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { apiCreateProduct, apiProduct, products } from "~/server/db/schema";
+
+const inputProduct = z.object({
+  id: z.string(),
+  name: z.string().min(1).max(32),
+  features: z.array(
+    z.object({
+      title: z.string(),
+      description: z.string(),
+    }),
+  ),
+});
+
+export type ProductInput = z.infer<typeof inputProduct>;
+
+export type Product = Prisma.ProductGetPayload<{
+  include: { features: true };
+}>;
 
 export const productRouter = createTRPCRouter({
-  get: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.select().from(products);
-  }),
-  getProduct: publicProcedure
+  get: publicProcedure
     .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
-      return await ctx.db
-        .select()
-        .from(products)
-        .where(eq(products.id, input.id));
+    .query(async ({ ctx, input }) =>
+      ctx.db.product.findUnique({
+        where: { id: input.id },
+        include: {
+          features: true,
+        },
+      }),
+    ),
+  getAll: publicProcedure.query(async ({ ctx }) => ctx.db.product.findMany()),
+  create: publicProcedure.input(inputProduct).mutation(async ({ ctx, input }) =>
+    ctx.db.product.create({
+      data: {
+        id: input.id,
+        name: input.name,
+        features: {
+          create: input.features,
+        },
+      },
     }),
-  create: publicProcedure
-    .input(apiCreateProduct)
-    .mutation(async ({ ctx, input }) => {
-      return await ctx.db.insert(products).values(input).returning();
-    }),
-  update: publicProcedure.input(apiProduct).mutation(async ({ ctx, input }) => {
-    return await ctx.db
-      .update(products)
-      .set(input)
-      .where(eq(products.id, input.id!))
-      .returning();
-  }),
-  delete: publicProcedure
-    .input(z.object({ id: z.number() }))
-    .mutation(async ({ ctx, input }) => {
-      return await ctx.db
-        .delete(products)
-        .where(eq(products.id, input.id))
-        .returning();
-    }),
+  ),
 });

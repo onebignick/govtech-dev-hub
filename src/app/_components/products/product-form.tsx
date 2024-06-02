@@ -1,7 +1,3 @@
-"use client";
-
-import { zodResolver } from "mantine-form-zod-resolver";
-import { useUser } from "@clerk/nextjs";
 import {
   Stack,
   Button,
@@ -21,63 +17,52 @@ import {
   IconFile,
   IconTrash,
 } from "@tabler/icons-react";
-import {
-  type Product,
-  quarterEnum,
-  type apiCreateProductType,
-} from "~/server/db/schema";
+import { type ProductInput } from "~/server/api/routers/product";
 
 export function ProductForm({
-  initialValues = null,
   submitForm,
 }: {
-  initialValues?: Product | null;
-  submitForm: (object: apiCreateProductType) => void;
+  submitForm: (object: ProductInput) => void;
 }) {
-  const { user } = useUser();
-  const form = useForm({
+  const form = useForm<ProductInput>({
     mode: "uncontrolled",
-    initialValues: initialValues ?? {
+    initialValues: {
       id: "",
       name: "",
-      summary: "",
-      type: "product",
-      keyfeatures: [{ title: "", description: "" }],
-      highlights: [],
+      features: [],
     },
     validate: {
-      type: isNotEmpty("Type is required"),
       name: isNotEmpty("Name is required"),
-      summary: isNotEmpty("Summary is required"),
     },
   });
 
-  const keyFeaturesField = (
+  const featuresField = (
     <Input.Wrapper
       label="Key Features"
       description="List down your key features"
-      key={`keyfeatures`}
-      {...form.getInputProps(`keyfeatures`)}
+      key={`features`}
+      {...form.getInputProps(`features`)}
     >
-      {(form.getValues().keyfeatures ?? []).map((item, index) => (
-        <Group mt="xs" key={`keyfeatures.${index}`}>
+      {form.getValues().features.map((item, index) => (
+        <Group mt="xs" key={`features.${index}`}>
           <TextInput
             placeholder="Title"
             withAsterisk
             style={{ flex: 1 }}
-            key={form.key(`keyfeatures.${index}.title`)}
-            {...form.getInputProps(`keyfeatures.${index}.title`)}
+            key={form.key(`features.${index}.title`)}
+            {...form.getInputProps(`features.${index}.title`)}
           />
           <TextInput
             placeholder="Description"
             withAsterisk
             style={{ flex: 2 }}
-            key={form.key(`keyfeatures.${index}.description`)}
-            {...form.getInputProps(`keyfeatures.${index}.description`)}
+            key={form.key(`features.${index}.description`)}
+            {...form.getInputProps(`features.${index}.description`)}
           />
           <ActionIcon
             color="red"
-            onClick={() => form.removeListItem("keyfeatures", index)}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            onClick={() => form.removeListItem("features", index)}
           >
             <IconTrash size="1rem" />
           </ActionIcon>
@@ -87,7 +72,8 @@ export function ProductForm({
         <Button
           variant="light"
           onClick={() =>
-            form.insertListItem("keyfeatures", {
+            form.insertListItem("features", {
+              id: 0,
               title: "",
               description: "",
             })
@@ -99,6 +85,7 @@ export function ProductForm({
     </Input.Wrapper>
   );
 
+  /*
   const highlightsField = (
     <Input.Wrapper
       label="Highlights"
@@ -201,12 +188,12 @@ export function ProductForm({
         </Button>
       </Group>
     </Input.Wrapper>
-  );
+  );*/
 
   return (
     <form
       onSubmit={form.onSubmit((values) => {
-        submitForm({ ...values, type: "product", admins: user!.id });
+        submitForm({ ...values });
       })}
     >
       <Stack>
@@ -259,8 +246,7 @@ export function ProductForm({
           key={form.key("summary")}
           {...form.getInputProps("summary")}
         />
-        {keyFeaturesField}
-        {highlightsField}
+        {featuresField}
         <Group justify="flex-end" mt="md">
           <Button type="submit">Submit</Button>
         </Group>
