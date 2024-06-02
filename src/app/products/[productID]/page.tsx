@@ -10,7 +10,6 @@ export default function AdminEditProduct({
 }: {
   params: { productID: string };
 }) {
-  const utils = api.useUtils();
   const productRes = api.product.get.useQuery({
     id: params.productID,
   });

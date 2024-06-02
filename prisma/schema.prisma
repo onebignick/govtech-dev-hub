@@ -34,7 +34,7 @@ model BlogPost {
 model Product {
   id         String      @id
   name       String
-  summary    String      @default("")
+  summary    String
   features   Feature[]
   changelogs Changelog[]
   createdAt  DateTime    @default(now())
@@ -54,7 +54,7 @@ model Feature {
 
 model Changelog {
   id        Int      @id @default(autoincrement())
-  title     String
+  quarter   String
   changes   String[]
   product   Product  @relation(fields: [productId], references: [id])
   productId String

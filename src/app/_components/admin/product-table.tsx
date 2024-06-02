@@ -19,14 +19,14 @@ const typeColors: Record<string, string> = {
 
 export function ProductsTable() {
   const utils = api.useUtils();
-  const products = api.product.get.useQuery();
+  const products = api.product.getAll.useQuery();
   const deleteUserMutation = api.product.delete.useMutation({
     onSuccess() {
-      utils.user.invalidate().catch((error) => console.log(error));
+      utils.product.invalidate().catch((error) => console.log(error));
     },
   });
 
-  const deleteProduct = (id: number) => {
+  const deleteProduct = (id: string) => {
     deleteUserMutation.mutate({ id });
     products.refetch().catch((error) => console.log(error));
   };
@@ -47,9 +47,10 @@ export function ProductsTable() {
       </Table.Td>
 
       <Table.Td>
+        {/* 
         <Badge color={typeColors[product.type.toLowerCase()]} variant="light">
           {product.type}
-        </Badge>
+        </Badge>   */}
       </Table.Td>
       <Table.Td></Table.Td>
       <Table.Td>

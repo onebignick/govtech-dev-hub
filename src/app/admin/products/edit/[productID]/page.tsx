@@ -11,18 +11,21 @@ export default function AdminEditProduct({
   params: { productID: string };
 }) {
   const utils = api.useUtils();
-  const product = api.product.getProduct.useQuery({
-    id: parseInt(params.productID),
+  const productRes = api.product.get.useQuery({
+    id: params.productID,
   });
+
   const editProductMutation = api.product.update.useMutation({
     onSuccess() {
       utils.product.invalidate().catch((error) => console.log(error));
     },
   });
 
-  if (!product.data) {
+  if (!productRes.data) {
     return <div>Loading...</div>;
   }
+
+  const product = productRes.data;
 
   return (
     <Shell
@@ -31,12 +34,9 @@ export default function AdminEditProduct({
         <Stack>
           <Title order={1}>Edit Product</Title>
           <ProductForm
-            initialValues={product.data[0]}
+            initialValues={product}
             submitForm={(values) => {
-              editProductMutation.mutate({
-                ...values,
-                type: "product",
-              });
+              editProductMutation.mutate(values);
             }}
           />
         </Stack>

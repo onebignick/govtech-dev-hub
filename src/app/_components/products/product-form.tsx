@@ -6,189 +6,34 @@ import {
   FileInput,
   NativeSelect,
   Textarea,
-  ActionIcon,
-  Input,
-  Fieldset,
 } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
-import {
-  IconArrowDown,
-  IconArrowUp,
-  IconFile,
-  IconTrash,
-} from "@tabler/icons-react";
-import { type ProductInput } from "~/server/api/routers/product";
+import { IconFile } from "@tabler/icons-react";
+import { type Product, type ProductInput } from "~/server/api/routers/product";
+import { ProductFeaturesInput } from "./product-features-input";
+import { ProductChangelogsInput } from "./product-changelogs-input";
 
 export function ProductForm({
+  initialValues,
   submitForm,
 }: {
+  initialValues?: Product;
   submitForm: (object: ProductInput) => void;
 }) {
+  console.log(initialValues);
   const form = useForm<ProductInput>({
     mode: "uncontrolled",
     initialValues: {
-      id: "",
-      name: "",
-      features: [],
+      id: initialValues?.id ?? "",
+      name: initialValues?.name ?? "",
+      summary: initialValues?.summary ?? "",
+      features: initialValues?.features ?? [],
+      changelogs: initialValues?.changelogs ?? [],
     },
     validate: {
       name: isNotEmpty("Name is required"),
     },
   });
-
-  const featuresField = (
-    <Input.Wrapper
-      label="Key Features"
-      description="List down your key features"
-      key={`features`}
-      {...form.getInputProps(`features`)}
-    >
-      {form.getValues().features.map((item, index) => (
-        <Group mt="xs" key={`features.${index}`}>
-          <TextInput
-            placeholder="Title"
-            withAsterisk
-            style={{ flex: 1 }}
-            key={form.key(`features.${index}.title`)}
-            {...form.getInputProps(`features.${index}.title`)}
-          />
-          <TextInput
-            placeholder="Description"
-            withAsterisk
-            style={{ flex: 2 }}
-            key={form.key(`features.${index}.description`)}
-            {...form.getInputProps(`features.${index}.description`)}
-          />
-          <ActionIcon
-            color="red"
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            onClick={() => form.removeListItem("features", index)}
-          >
-            <IconTrash size="1rem" />
-          </ActionIcon>
-        </Group>
-      ))}
-      <Group justify="center" mt="md">
-        <Button
-          variant="light"
-          onClick={() =>
-            form.insertListItem("features", {
-              id: 0,
-              title: "",
-              description: "",
-            })
-          }
-        >
-          Add Key Feature
-        </Button>
-      </Group>
-    </Input.Wrapper>
-  );
-
-  /*
-  const highlightsField = (
-    <Input.Wrapper
-      label="Highlights"
-      description="List down your highlights"
-      key={`highlights`}
-      {...form.getInputProps(`highlights`)}
-    >
-      {(form.getValues().highlights ?? []).map((item, index) => (
-        <Fieldset
-          mt="xs"
-          key={`highlights.${index}`}
-          legend="Quarterly Highlight"
-        >
-          <Group>
-            <NativeSelect
-              withAsterisk
-              key={form.key(`highlights.${index}.quarter`)}
-              data={quarterEnum.enumValues}
-              {...form.getInputProps(`highlights.${index}.quarter`)}
-            />
-            <ActionIcon
-              color="red"
-              onClick={() => form.removeListItem("highlights", index)}
-            >
-              <IconTrash size="1rem" />
-            </ActionIcon>
-            {index > 0 && (
-              <ActionIcon
-                variant="light"
-                onClick={() =>
-                  form.reorderListItem(`highlights`, {
-                    from: index,
-                    to: index - 1,
-                  })
-                }
-              >
-                <IconArrowUp size="1rem" />
-              </ActionIcon>
-            )}
-            {index < (form.getValues().highlights ?? []).length - 1 && (
-              <ActionIcon
-                variant="light"
-                onClick={() =>
-                  form.reorderListItem(`highlights`, {
-                    from: index,
-                    to: index + 1,
-                  })
-                }
-              >
-                <IconArrowDown size="1rem" />
-              </ActionIcon>
-            )}
-          </Group>
-          <Stack my="sm" gap={2}>
-            {(item.points ?? []).map((item, pointIndex) => (
-              <Group mt="xs" key={`highlights.${index}.points.${pointIndex}`}>
-                <TextInput
-                  placeholder="Point"
-                  withAsterisk
-                  style={{ flex: 1 }}
-                  key={form.key(`highlights.${index}.points.${pointIndex}`)}
-                  {...form.getInputProps(
-                    `highlights.${index}.points.${pointIndex}`,
-                  )}
-                />
-                <ActionIcon
-                  color="red"
-                  onClick={() =>
-                    form.removeListItem(`highlights.${index}.points`, index)
-                  }
-                >
-                  <IconTrash size="1rem" />
-                </ActionIcon>
-              </Group>
-            ))}
-          </Stack>
-          <Group justify="center" mt="md">
-            <Button
-              variant="outline"
-              onClick={() =>
-                form.insertListItem(`highlights.${index}.points`, "")
-              }
-            >
-              Add Point
-            </Button>
-          </Group>
-        </Fieldset>
-      ))}
-      <Group justify="center" mt="md">
-        <Button
-          variant="light"
-          onClick={() =>
-            form.insertListItem("highlights", {
-              quarter: "",
-              points: [""],
-            })
-          }
-        >
-          Add Quarter
-        </Button>
-      </Group>
-    </Input.Wrapper>
-  );*/
 
   return (
     <form
@@ -246,7 +91,8 @@ export function ProductForm({
           key={form.key("summary")}
           {...form.getInputProps("summary")}
         />
-        {featuresField}
+        <ProductFeaturesInput form={form} />
+        <ProductChangelogsInput form={form} />
         <Group justify="flex-end" mt="md">
           <Button type="submit">Submit</Button>
         </Group>
