@@ -2,8 +2,6 @@ import { Stack, Title, Text, Space } from "@mantine/core";
 import { type Product } from "~/server/api/routers/product";
 
 export function ProductPage({ product }: { product: Product }) {
-  console.log(product);
-
   return (
     <Stack>
       <Title order={1}>{product.name}</Title>

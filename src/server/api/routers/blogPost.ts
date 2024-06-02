@@ -5,6 +5,7 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 const inputBlogPost = z.object({
   title: z.string().min(1),
   content: z.string().min(1),
+  author: z.string(),
 });
 
 export type BlogPostInput = z.infer<typeof inputBlogPost>;
@@ -29,8 +30,9 @@ export const blogPostRouter = createTRPCRouter({
           title: input.title,
           content: input.content,
           author: {
-            connect: {
-              id: "",
+            connectOrCreate: {
+              create: { clerkUserId: input.author },
+              where: { clerkUserId: input.author },
             },
           },
         },

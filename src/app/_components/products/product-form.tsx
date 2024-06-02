@@ -20,7 +20,6 @@ export function ProductForm({
   initialValues?: Product;
   submitForm: (object: ProductInput) => void;
 }) {
-  console.log(initialValues);
   const form = useForm<ProductInput>({
     mode: "uncontrolled",
     initialValues: {
@@ -29,6 +28,7 @@ export function ProductForm({
       summary: initialValues?.summary ?? "",
       features: initialValues?.features ?? [],
       changelogs: initialValues?.changelogs ?? [],
+      admins: [],
     },
     validate: {
       name: isNotEmpty("Name is required"),
@@ -38,7 +38,7 @@ export function ProductForm({
   return (
     <form
       onSubmit={form.onSubmit((values) => {
-        submitForm({ ...values });
+        submitForm(values);
       })}
     >
       <Stack>

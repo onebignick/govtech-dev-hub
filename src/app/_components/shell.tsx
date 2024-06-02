@@ -36,6 +36,11 @@ export const navLinks: Record<string, Link> = {
     inNavbar: false,
   },
   blog: { title: "Blog", link: "/blog", inNavbar: true },
+  createBlogPost: {
+    title: "Create Blog Post",
+    link: "/blog/new",
+    inNavbar: false,
+  },
 };
 
 export default function Shell({ page, backLink }: ShellProps) {

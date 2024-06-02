@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@clerk/nextjs";
 import Shell, { navLinks } from "@frontend/_components/shell";
 import { Stack, Title } from "@mantine/core";
 import { useRouter } from "next/navigation";
@@ -15,6 +16,7 @@ export default function CreateNewProduct() {
     },
   });
 
+  const auth = useAuth();
   return (
     <Shell
       backLink={navLinks.products}
@@ -22,13 +24,18 @@ export default function CreateNewProduct() {
         <Stack>
           <Title order={1}>Create New</Title>
           <ProductForm
-            submitForm={(values) => {
-              console.log(values);
-              createProductMutation.mutate(values, {
-                onError: (error) => console.log(error),
-                onSuccess: () => router.push(navLinks.products!.link),
-              });
-            }}
+            submitForm={(values) =>
+              createProductMutation.mutate(
+                {
+                  ...values,
+                  admins: auth.userId ? [auth.userId] : [],
+                },
+                {
+                  onError: (error) => console.log(error),
+                  onSuccess: () => router.push(navLinks.products!.link),
+                },
+              )
+            }
           />
         </Stack>
       }

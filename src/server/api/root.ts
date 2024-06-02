@@ -8,7 +8,7 @@ import { blogPostRouter } from "./routers/blogPost";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  post: blogPostRouter,
+  blogPost: blogPostRouter,
   product: productRouter,
 });
 

@@ -19,6 +19,7 @@ const inputProduct = z.object({
       changes: z.array(z.string()),
     }),
   ),
+  admins: z.array(z.string()),
 });
 
 export type ProductInput = z.infer<typeof inputProduct>;
@@ -53,7 +54,12 @@ export const productRouter = createTRPCRouter({
           create: input.changelogs,
         },
         admins: {
-          create: [],
+          connectOrCreate: input.admins.map((admin) => {
+            return {
+              create: { clerkUserId: admin },
+              where: { clerkUserId: admin },
+            };
+          }),
         },
       },
     }),
