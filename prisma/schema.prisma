@@ -10,21 +10,36 @@ datasource db {
   url      = env("POSTGRES_URL")
 }
 
-model Post {
+model User {
+  id          String     @id @default(cuid())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  clerkUserId String?    @unique
+  blogPosts   BlogPost[]
+  products    Product[]
+}
+
+model BlogPost {
   id        Int      @id @default(autoincrement())
-  name      String
+  title     String
+  content   String
+  author    User     @relation(fields: [authorID], references: [id])
+  authorID  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([name])
+  @@index([title])
 }
 
 model Product {
-  id       String    @id
-  name     String
-  features Feature[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String      @id
+  name       String
+  summary    String      @default("")
+  features   Feature[]
+  changelogs Changelog[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  admins     User[]
 
   @@index([name])
 }
@@ -35,4 +50,12 @@ model Feature {
   description String
   product     Product @relation(fields: [productId], references: [id])
   productId   String
+}
+
+model Changelog {
+  id        Int      @id @default(autoincrement())
+  title     String
+  changes   String[]
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
 }
