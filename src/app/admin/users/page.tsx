@@ -7,7 +7,7 @@ import { UsersTable } from "@frontend/_components/admin/user-table";
 
 export default function Admin() {
   const utils = api.useUtils();
-  const createUserMutation = api.user.createUser.useMutation({
+  /*const createUserMutation = api.user.createUser.useMutation({
     onSuccess() {
       utils.user.invalidate().catch((error) => console.log(error));
     },
@@ -25,7 +25,7 @@ export default function Admin() {
         },
       },
     );
-  };
+  };*/
 
   return (
     <Shell
@@ -33,7 +33,6 @@ export default function Admin() {
       page={
         <Stack>
           <Title order={1}>User Management</Title>
-          <Button onClick={handleCreate}>Generate Data</Button>
           <UsersTable />
         </Stack>
       }

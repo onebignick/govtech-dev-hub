@@ -19,7 +19,7 @@ const typeColors: Record<string, string> = {
 
 export function UsersTable() {
   const utils = api.useUtils();
-  const users = api.user.get.useQuery();
+  /*const users = api.user.get.useQuery();
   const deleteUserMutation = api.user.deleteUser.useMutation({
     onSuccess() {
       utils.user.invalidate().catch((error) => console.log(error));
@@ -80,7 +80,7 @@ export function UsersTable() {
         </Group>
       </Table.Td>
     </Table.Tr>
-  ));
+  ));*/
 
   return (
     <Table.ScrollContainer minWidth={800}>
@@ -94,7 +94,7 @@ export function UsersTable() {
             <Table.Th />
           </Table.Tr>
         </Table.Thead>
-        <Table.Tbody>{rows}</Table.Tbody>
+        <Table.Tbody></Table.Tbody>
       </Table>
     </Table.ScrollContainer>
   );
