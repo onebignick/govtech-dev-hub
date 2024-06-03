@@ -24,7 +24,7 @@ export default function CreateNewProduct() {
         <Stack>
           <Title order={1}>Create New</Title>
           <ProductForm
-            submitForm={(values) =>
+            submitForm={(values) => {
               createProductMutation.mutate(
                 {
                   ...values,
@@ -34,8 +34,8 @@ export default function CreateNewProduct() {
                   onError: (error) => console.log(error),
                   onSuccess: () => router.push(navLinks.products!.link),
                 },
-              )
-            }
+              );
+            }}
           />
         </Stack>
       }

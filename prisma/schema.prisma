@@ -16,6 +16,17 @@ model User {
   products    Product[]  @relation("ProductToUser")
 }
 
+model Image {
+  id        String   @id @default(cuid())
+  publicId  String   @unique
+  format    String
+  version   String
+  url       String
+  secureUrl String
+  logoFor   Product? @relation("ProductLogo")
+  coverFor  Product? @relation("ProductCover")
+}
+
 model BlogPost {
   id        String   @id
   title     String
@@ -37,6 +48,10 @@ model Product {
   changelogs Changelog[]
   features   Feature[]
   admins     User[]      @relation("ProductToUser")
+  logo       Image       @relation("ProductLogo", fields: [logoId], references: [id])
+  logoId     String      @unique
+  cover      Image       @relation("ProductCover", fields: [coverId], references: [id])
+  coverId    String      @unique
 
   @@index([name])
 }

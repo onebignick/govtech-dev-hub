@@ -3,15 +3,14 @@ import {
   Button,
   Group,
   TextInput,
-  FileInput,
   NativeSelect,
   Textarea,
 } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
-import { IconFile } from "@tabler/icons-react";
 import { type Product, type ProductInput } from "~/server/api/routers/product";
 import { ProductFeaturesInput } from "./product-features-input";
 import { ProductChangelogsInput } from "./product-changelogs-input";
+import { UploadInput } from "../upload-input";
 
 export function ProductForm({
   initialValues,
@@ -29,6 +28,8 @@ export function ProductForm({
       features: initialValues?.features ?? [],
       changelogs: initialValues?.changelogs ?? [],
       admins: [],
+      logo: "",
+      cover: "",
     },
     validate: {
       name: isNotEmpty("Name is required"),
@@ -69,20 +70,20 @@ export function ProductForm({
           key={form.key("name")}
           {...form.getInputProps("name")}
         />
-        <FileInput
-          withAsterisk
-          leftSection={<IconFile />}
-          label="Logo"
-          description="Upload a square icon"
-          placeholder="Click to upload file"
-        />
-        <FileInput
-          withAsterisk
-          leftSection={<IconFile />}
-          label="Cover"
-          description="Upload a 16:9 image"
-          placeholder="Click to upload file"
-        />
+        <Group align="flex-start" grow>
+          <UploadInput
+            label="Logo"
+            description="Upload a square icon"
+            key={form.key("logo")}
+            {...form.getInputProps("logo")}
+          />
+          <UploadInput
+            label="Cover"
+            description="Upload a 16:9 image"
+            key={form.key("cover")}
+            {...form.getInputProps("cover")}
+          />
+        </Group>
         <Textarea
           withAsterisk
           label="Summary"

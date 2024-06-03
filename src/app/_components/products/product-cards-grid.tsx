@@ -3,6 +3,7 @@ import Link from "next/link";
 import { navLinks } from "../shell";
 import classes from "~/styles/cursor.module.css";
 import { api } from "~/trpc/react";
+import { CloudinaryImage } from "../cloudinary-image";
 
 export function ProductCardsGrid() {
   const products = api.product.getAll.useQuery();
@@ -20,6 +21,7 @@ export function ProductCardsGrid() {
       shadow="xs"
       p="xl"
     >
+      <CloudinaryImage image={product.logo} alt={"Logo"} />
       <Text size="xl" fw="bold">
         {product.name}
       </Text>

@@ -1,5 +1,6 @@
 import { type Prisma } from "@prisma/client";
 import { z } from "zod";
+import { cloudinaryUploader } from "~/app/utils/cloudinary";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
@@ -20,12 +21,14 @@ const inputProduct = z.object({
     }),
   ),
   admins: z.array(z.string()),
+  logo: z.string(),
+  cover: z.string(),
 });
 
 export type ProductInput = z.infer<typeof inputProduct>;
 
 export type Product = Prisma.ProductGetPayload<{
-  include: { features: true; changelogs: true };
+  include: { features: true; changelogs: true; logo: true; cover: true };
 }>;
 
 export const productRouter = createTRPCRouter({
@@ -37,33 +40,67 @@ export const productRouter = createTRPCRouter({
         include: {
           features: true,
           changelogs: true,
+          logo: true,
+          cover: true,
         },
       }),
     ),
-  getAll: publicProcedure.query(async ({ ctx }) => ctx.db.product.findMany()),
-  create: publicProcedure.input(inputProduct).mutation(async ({ ctx, input }) =>
-    ctx.db.product.create({
-      data: {
-        id: input.id,
-        name: input.name,
-        summary: input.summary,
-        features: {
-          create: input.features,
-        },
-        changelogs: {
-          create: input.changelogs,
-        },
-        admins: {
-          connectOrCreate: input.admins.map((admin) => {
-            return {
-              create: { clerkUserId: admin },
-              where: { clerkUserId: admin },
-            };
-          }),
-        },
+  getAll: publicProcedure.query(async ({ ctx }) =>
+    ctx.db.product.findMany({
+      include: {
+        logo: true,
+        cover: true,
       },
     }),
   ),
+  create: publicProcedure
+    .input(inputProduct)
+    .mutation(async ({ ctx, input }) => {
+      return Promise.all([
+        cloudinaryUploader.upload(input.logo),
+        cloudinaryUploader.upload(input.cover),
+      ]).then((responses) => {
+        return ctx.db.product.create({
+          data: {
+            id: input.id,
+            name: input.name,
+            summary: input.summary,
+            features: {
+              create: input.features,
+            },
+            changelogs: {
+              create: input.changelogs,
+            },
+            admins: {
+              connectOrCreate: input.admins.map((admin) => {
+                return {
+                  create: { clerkUserId: admin },
+                  where: { clerkUserId: admin },
+                };
+              }),
+            },
+            logo: {
+              create: {
+                publicId: responses[0].public_id,
+                version: `${responses[0].version}`,
+                format: responses[0].format,
+                url: responses[0].url,
+                secureUrl: responses[0].secure_url,
+              },
+            },
+            cover: {
+              create: {
+                publicId: responses[1].public_id,
+                version: `${responses[1].version}`,
+                format: responses[1].format,
+                url: responses[1].url,
+                secureUrl: responses[1].secure_url,
+              },
+            },
+          },
+        });
+      });
+    }),
   update: publicProcedure.input(inputProduct).mutation(async ({ ctx, input }) =>
     ctx.db.product.update({
       data: {

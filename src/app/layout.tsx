@@ -1,6 +1,7 @@
 import "~/styles/globals.css";
 import "@mantine/core/styles.css";
-import "@mantine/tiptap/styles.css";
+import "@uploadthing/react/styles.css";
+import "@mantine/dropzone/styles.css";
 
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { ClerkProvider } from "@clerk/nextjs";
