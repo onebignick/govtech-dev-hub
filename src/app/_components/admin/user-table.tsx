@@ -1,24 +1,6 @@
-import {
-  Avatar,
-  Badge,
-  Table,
-  Group,
-  Text,
-  ActionIcon,
-  Anchor,
-  rem,
-} from "@mantine/core";
-import { IconPencil, IconTrash } from "@tabler/icons-react";
-import { api } from "~/trpc/react";
-
-const typeColors: Record<string, string> = {
-  user: "blue",
-  admin: "cyan",
-  superadmin: "pink",
-};
+import { Table } from "@mantine/core";
 
 export function UsersTable() {
-  const utils = api.useUtils();
   /*const users = api.user.get.useQuery();
   const deleteUserMutation = api.user.deleteUser.useMutation({
     onSuccess() {
