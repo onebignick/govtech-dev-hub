@@ -10,6 +10,7 @@ import Link from "next/link";
 import { IconChevronLeft } from "@tabler/icons-react";
 import React from "react";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { LightDarkModeButton } from "./light-dark-mode-btn";
 
 interface ShellProps {
   page: ReactNode;
@@ -76,6 +77,7 @@ export default function Shell({ page, backLink }: ShellProps) {
                 ))}
               <UserButton />
             </SignedIn>
+            <LightDarkModeButton />
           </Group>
         </Group>
       </AppShell.Header>

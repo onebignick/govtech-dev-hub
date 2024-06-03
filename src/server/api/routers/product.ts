@@ -57,8 +57,16 @@ export const productRouter = createTRPCRouter({
     .input(inputProduct)
     .mutation(async ({ ctx, input }) => {
       return Promise.all([
-        cloudinaryUploader.upload(input.logo),
-        cloudinaryUploader.upload(input.cover),
+        cloudinaryUploader.upload(input.logo, {
+          width: 1000,
+          aspectRatio: 1,
+          resize: "scale",
+        }),
+        cloudinaryUploader.upload(input.cover, {
+          width: 1500,
+          aspectRatio: 16 / 9,
+          resize: "scale",
+        }),
       ]).then((responses) => {
         return ctx.db.product.create({
           data: {
