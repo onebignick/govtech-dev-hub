@@ -1,14 +1,3 @@
-import {
-  RichTextEditor,
-  Link,
-  type RichTextEditorProps,
-} from "@mantine/tiptap";
-import { type Content, useEditor } from "@tiptap/react";
-import Highlight from "@tiptap/extension-highlight";
-import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
-import Superscript from "@tiptap/extension-superscript";
-import SubScript from "@tiptap/extension-subscript";
 import { Input } from "@mantine/core";
 import { useUncontrolled } from "@mantine/hooks";
 import MDEditor from "@uiw/react-md-editor";

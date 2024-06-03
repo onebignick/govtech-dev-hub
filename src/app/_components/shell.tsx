@@ -4,7 +4,7 @@ import { AppShell, Box, Burger, Button, Group } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import NextImage from "next/image";
 import { Image } from "@mantine/core";
-import logo from "public/logo.webp";
+import logo from "/public/logo.webp";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { IconChevronLeft } from "@tabler/icons-react";
