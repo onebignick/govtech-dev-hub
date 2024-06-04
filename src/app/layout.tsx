@@ -1,6 +1,5 @@
 import "~/styles/globals.css";
 import "@mantine/core/styles.css";
-import "@uploadthing/react/styles.css";
 import "@mantine/dropzone/styles.css";
 
 import { ColorSchemeScript, MantineProvider, createTheme } from "@mantine/core";

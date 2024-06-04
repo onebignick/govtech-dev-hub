@@ -1,21 +1,7 @@
-import {
-  Avatar,
-  Badge,
-  Table,
-  Group,
-  Text,
-  ActionIcon,
-  rem,
-} from "@mantine/core";
+import { Avatar, Table, Group, Text, ActionIcon, rem } from "@mantine/core";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import Link from "next/link";
 import { api } from "~/trpc/react";
-
-const typeColors: Record<string, string> = {
-  product: "blue",
-  agencyproject: "cyan",
-  innersource: "orange",
-};
 
 export function ProductsTable() {
   const utils = api.useUtils();

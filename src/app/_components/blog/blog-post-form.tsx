@@ -1,6 +1,5 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
 import { Stack, Button, Group, TextInput, FileInput } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { IconFile } from "@tabler/icons-react";
