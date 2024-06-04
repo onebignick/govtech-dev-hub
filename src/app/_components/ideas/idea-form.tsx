@@ -1,16 +1,7 @@
 "use client";
 
-import {
-  Stack,
-  Button,
-  Group,
-  TextInput,
-  FileInput,
-  Textarea,
-} from "@mantine/core";
+import { Stack, Button, Group, TextInput, Textarea } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
-import { IconFile } from "@tabler/icons-react";
-import { Editor } from "~/app/_components/editor";
 import { type IdeaInput } from "~/server/api/routers/idea";
 
 export function IdeaForm({
@@ -29,6 +20,8 @@ export function IdeaForm({
     },
     validate: {
       title: isNotEmpty("Title is required"),
+      content: (value) =>
+        value.length > 200 ? "Please type less than 250 characters" : null,
     },
   });
 

@@ -6,6 +6,7 @@ import {
   ActionIcon,
   rem,
   Modal,
+  Grid,
 } from "@mantine/core";
 import cardClasses from "~/styles/card.module.css";
 import titleClasses from "~/styles/title.module.css";
@@ -48,93 +49,104 @@ export function IdeaCard({ idea }: { idea: Idea }) {
 
   return (
     <Card key={idea.id} className={cardClasses.staticCard} shadow="xs">
-      <Group>
-        <Modal opened={opened} onClose={close}>
-          <Text
-            c="white"
-            size="xl"
-            fz="h3"
-            fw={900}
-            className={titleClasses.titleUnderline}
-            mb="md"
-          >
-            Edit Idea
-          </Text>
-          <IdeaForm
-            initialValues={{
-              title: idea.title,
-              content: idea.content,
-              creator: "",
-            }}
-            submitForm={(values) =>
-              editIdeaMutation.mutate(
-                {
-                  ...values,
-                  id: idea.id,
-                },
-                {
-                  onError: (error) => console.log(error),
-                },
-              )
-            }
-          />
-        </Modal>
-        <Stack px="xl" align="center" gap={0}>
-          <ActionIcon
-            variant={upvotedIDs.includes(auth.userId!) ? "variant" : "outline"}
-            aria-label="Settings"
-            color="rgba(255, 255, 255, 1)"
-            gradient={{ from: "blue", to: "cyan", deg: 90 }}
-            radius={100}
-            onClick={() =>
-              !upvotedIDs.includes(auth.userId!)
-                ? upvoteIdeaMutation.mutate(
-                    {
-                      id: idea.id,
-                      users: [...upvotedIDs, auth.userId!],
-                    },
-                    {
-                      onError: (error) => console.log(error),
-                    },
-                  )
-                : downvoteIdeaMutation.mutate(
-                    {
-                      id: idea.id,
-                      users: [auth.userId!],
-                    },
-                    {
-                      onError: (error) => console.log(error),
-                    },
-                  )
-            }
-          >
-            <IconArrowUp />
-          </ActionIcon>
-          <Text c="white" size="xl" fz="h3" fw={300}>
-            {idea.upvoted.length - idea.downvoted.length}
-          </Text>
-        </Stack>
-        <Stack gap={0}>
-          <Group>
-            <Link href={`${navLinks.ideas?.link}/${idea.id}`}>
-              <Text className={titleClasses.hoverWhiteText} size="xl" fw={900}>
-                {idea.title}
-              </Text>
-            </Link>
-            {auth.userId === idea.creator.clerkUserId && (
-              <ActionIcon onClick={open} variant="subtle" color="gray">
-                <IconPencil
-                  style={{ width: rem(16), height: rem(16) }}
-                  stroke={1.5}
-                />
-              </ActionIcon>
-            )}
-          </Group>
-          <Text c="white" size="lg">
-            {`by John Tan`}
-          </Text>
-        </Stack>
-      </Group>
+      <Grid>
+        <Grid.Col span="content">
+          <Stack h="100%" px="xl" align="center" justify="center" gap={0}>
+            <ActionIcon
+              variant={
+                upvotedIDs.includes(auth.userId!) ? "variant" : "outline"
+              }
+              aria-label="Settings"
+              color="rgba(255, 255, 255, 1)"
+              gradient={{ from: "blue", to: "cyan", deg: 90 }}
+              radius={100}
+              onClick={() =>
+                !upvotedIDs.includes(auth.userId!)
+                  ? upvoteIdeaMutation.mutate(
+                      {
+                        id: idea.id,
+                        users: [...upvotedIDs, auth.userId!],
+                      },
+                      {
+                        onError: (error) => console.log(error),
+                      },
+                    )
+                  : downvoteIdeaMutation.mutate(
+                      {
+                        id: idea.id,
+                        users: [auth.userId!],
+                      },
+                      {
+                        onError: (error) => console.log(error),
+                      },
+                    )
+              }
+            >
+              <IconArrowUp />
+            </ActionIcon>
+            <Text c="white" size="xl" fz="h3" fw={300}>
+              {idea.upvoted.length - idea.downvoted.length}
+            </Text>
+          </Stack>
+        </Grid.Col>
+        <Grid.Col span="auto">
+          <Stack gap={0}>
+            <Group>
+              <Link href={`${navLinks.ideas?.link}/${idea.id}`}>
+                <Text
+                  className={titleClasses.hoverWhiteText}
+                  size="xl"
+                  fw={900}
+                >
+                  {idea.title}
+                </Text>
+              </Link>
+              {auth.userId === idea.creator.clerkUserId && (
+                <ActionIcon onClick={open} variant="subtle" color="gray">
+                  <IconPencil
+                    style={{ width: rem(16), height: rem(16) }}
+                    stroke={1.5}
+                  />
+                </ActionIcon>
+              )}
+            </Group>
+            <Text c="white" size="lg">
+              {`by John Tan`}
+            </Text>
+            {idea.content.length > 0 && <Text c="white">{idea.content}</Text>}
+          </Stack>
+        </Grid.Col>
+      </Grid>
+      <Modal opened={opened} onClose={close}>
+        <Text
+          c="white"
+          size="xl"
+          fz="h3"
+          fw={900}
+          className={titleClasses.titleUnderline}
+          mb="md"
+        >
+          Edit Idea
+        </Text>
+        <IdeaForm
+          initialValues={{
+            title: idea.title,
+            content: idea.content,
+            creator: "",
+          }}
+          submitForm={(values) =>
+            editIdeaMutation.mutate(
+              {
+                ...values,
+                id: idea.id,
+              },
+              {
+                onError: (error) => console.log(error),
+              },
+            )
+          }
+        />
+      </Modal>
     </Card>
   );
 }
