@@ -101,7 +101,7 @@ export function IdeaCard({ idea }: { idea: Idea }) {
                   {idea.title}
                 </Text>
               </Link>
-              {auth.userId === idea.creator.clerkUserId && (
+              {auth.userId === idea.creator.id && (
                 <ActionIcon onClick={open} variant="subtle" color="gray">
                   <IconPencil
                     style={{ width: rem(16), height: rem(16) }}
