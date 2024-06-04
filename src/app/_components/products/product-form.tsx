@@ -11,6 +11,7 @@ import { type Product, type ProductInput } from "~/server/api/routers/product";
 import { ProductFeaturesInput } from "./product-features-input";
 import { ProductChangelogsInput } from "./product-changelogs-input";
 import { UploadInput } from "../upload-input";
+import { ProductLinksInput } from "./product-links-input";
 
 export function ProductForm({
   initialValues,
@@ -27,6 +28,7 @@ export function ProductForm({
       name: initialValues?.name ?? "",
       oneLiner: initialValues?.oneLiner ?? "",
       summary: initialValues?.summary ?? "",
+      links: initialValues?.links ?? [],
       features: initialValues?.features ?? [],
       changelogs: initialValues?.changelogs ?? [],
       admins: [],
@@ -104,6 +106,7 @@ export function ProductForm({
           key={form.key("summary")}
           {...form.getInputProps("summary")}
         />
+        <ProductLinksInput form={form} />
         <ProductFeaturesInput form={form} />
         <ProductChangelogsInput form={form} />
         <Group justify="flex-end" mt="md">

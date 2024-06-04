@@ -10,6 +10,12 @@ const inputProduct = z.object({
   name: z.string().min(1).max(32),
   oneLiner: z.string(),
   summary: z.string(),
+  links: z.array(
+    z.object({
+      label: z.string(),
+      url: z.string().url(),
+    }),
+  ),
   features: z.array(
     z.object({
       title: z.string(),
@@ -30,7 +36,13 @@ const inputProduct = z.object({
 export type ProductInput = z.infer<typeof inputProduct>;
 
 export type Product = Prisma.ProductGetPayload<{
-  include: { features: true; changelogs: true; logo: true; cover: true };
+  include: {
+    links: true;
+    features: true;
+    changelogs: true;
+    logo: true;
+    cover: true;
+  };
 }>;
 
 export const productRouter = createTRPCRouter({
@@ -40,6 +52,7 @@ export const productRouter = createTRPCRouter({
       ctx.db.product.findFirst({
         where: { id: input.id },
         include: {
+          links: true,
           features: true,
           changelogs: true,
           logo: true,
@@ -79,6 +92,9 @@ export const productRouter = createTRPCRouter({
             name: input.name,
             oneLiner: input.oneLiner,
             summary: input.summary,
+            links: {
+              create: input.links,
+            },
             features: {
               create: input.features,
             },

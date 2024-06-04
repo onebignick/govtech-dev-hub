@@ -63,11 +63,12 @@ model BlogPost {
 model Product {
   id         String      @id
   name       String
-  type       ProductType 
-  oneLiner   String 
+  type       ProductType
+  oneLiner   String
   summary    String
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
+  links      Link[]
   changelogs Changelog[]
   features   Feature[]
   admins     User[]      @relation("ProductToUser")
@@ -78,6 +79,14 @@ model Product {
   contacts   Contact[]   @relation("ProductContacts")
 
   @@index([name])
+}
+
+model Link {
+  id        Int     @id @default(autoincrement())
+  label     String
+  url       String
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
 }
 
 model Feature {
