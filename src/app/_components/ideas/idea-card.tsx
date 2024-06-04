@@ -92,15 +92,9 @@ export function IdeaCard({ idea }: { idea: Idea }) {
         <Grid.Col span="auto">
           <Stack gap={0}>
             <Group>
-              <Link href={`${navLinks.ideas?.link}/${idea.id}`}>
-                <Text
-                  className={titleClasses.hoverWhiteText}
-                  size="xl"
-                  fw={900}
-                >
-                  {idea.title}
-                </Text>
-              </Link>
+              <Text className={titleClasses.hoverWhiteText} size="xl" fw={900}>
+                {idea.title}
+              </Text>
               {auth.userId === idea.creator.id && (
                 <ActionIcon onClick={open} variant="subtle" color="gray">
                   <IconPencil
