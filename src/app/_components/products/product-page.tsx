@@ -9,9 +9,9 @@ import {
   SimpleGrid,
   Timeline,
 } from "@mantine/core";
-import { CloudinaryImage } from "../cloudinary-image";
 import { type Product } from "~/server/api/routers/product";
-import classes from "~/styles/feature.module.css";
+import cardClasses from "~/styles/card.module.css";
+import titleClasses from "~/styles/title.module.css";
 import { type Changelog, type Feature } from "@prisma/client";
 
 export function ProductPage({ product }: { product: Product }) {
@@ -20,37 +20,42 @@ export function ProductPage({ product }: { product: Product }) {
       key={feature.title}
       shadow="md"
       radius="md"
-      className={classes.card}
+      className={cardClasses.staticCard}
       padding="xl"
     >
-      <Text fz="lg" fw={500} className={classes.cardTitle} mt="md">
-        {feature.title}
-      </Text>
-      <Text fz="sm" c="dimmed" mt="sm">
-        {feature.description}
-      </Text>
+      <Stack align="flex-start">
+        <Text
+          fz="lg"
+          fw={900}
+          c="white"
+          className={titleClasses.titleUnderline}
+        >
+          {feature.title}
+        </Text>
+        <Text c="white" fz="md" mt="md">
+          {feature.description}
+        </Text>
+      </Stack>
     </Card>
   );
 
   const ChangelogDisplay = ({ changelog }: { changelog: Changelog }) => (
     <>
       {changelog.changes.map((change, index) => (
-        <Timeline.Item key={`${changelog.quarter}.${index}`}>
+        <Stack key={`${changelog.quarter}.${index}`}>
           <Text size="xl" fw="bolder">
             {changelog.quarter}
           </Text>
           <Text c="dimmed" size="sm">
             {change}
           </Text>
-        </Timeline.Item>
+        </Stack>
       ))}
     </>
   );
 
-  console.log(product.changelogs);
-
   return (
-    <Stack>
+    <Stack align="flex-start">
       <Group>
         <Image
           w="10vw"
@@ -59,21 +64,39 @@ export function ProductPage({ product }: { product: Product }) {
           src={product.logo.url}
           alt={`${product.name} Logo`}
         />
-        <Title order={1}>{product.name}</Title>
+        <Stack gap={0}>
+          <Text>{product.oneLiner}</Text>
+          <Title c="white" order={1} className={titleClasses.titleUnderline}>
+            {product.name}
+          </Title>
+        </Stack>
       </Group>
-      <Text>{product.summary}</Text>
-      <CloudinaryImage image={product.cover} alt={"Cover"} />
+      <Text size="lg" fw="500">
+        {product.summary}
+      </Text>
+      <Image src={product.cover?.url} alt={`${product.name} Cover`} />
       <Space h="md" />
-      <Title order={2}>Key Features</Title>
-      <SimpleGrid cols={3}>
+      <Title order={2} c="white">
+        Key Features
+      </Title>
+      <SimpleGrid w="100%" cols={3}>
         {product.features?.map((feature) => (
           <FeatureDisplay key={feature.title} feature={feature} />
         ))}
       </SimpleGrid>
-      <Title order={2}>Highlights</Title>
-      <Timeline bulletSize={25}>
+      <Title order={2} c="white">
+        Highlights
+      </Title>
+      <Timeline
+        color="violet"
+        active={product.changelogs.length + 1}
+        bulletSize={25}
+        mb="xl"
+      >
         {product.changelogs.map((changelog) => (
-          <ChangelogDisplay changelog={changelog} key={changelog.quarter} />
+          <Timeline.Item key={changelog.quarter}>
+            <ChangelogDisplay changelog={changelog} />
+          </Timeline.Item>
         ))}
         <Timeline.Item></Timeline.Item>
       </Timeline>

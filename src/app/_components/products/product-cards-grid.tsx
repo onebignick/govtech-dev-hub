@@ -1,8 +1,9 @@
-import { Text, SimpleGrid, Paper, Image, Stack, Card } from "@mantine/core";
+import { Text, SimpleGrid, Image, Stack, Card } from "@mantine/core";
 import Link from "next/link";
 import { navLinks } from "../shell";
 import classes from "~/styles/cursor.module.css";
 import cardClasses from "~/styles/card.module.css";
+import titleClasses from "~/styles/title.module.css";
 import { api } from "~/trpc/react";
 
 export function ProductCardsGrid() {
@@ -29,8 +30,16 @@ export function ProductCardsGrid() {
           src={product.logo.url}
           alt={`${product.name} Logo`}
         />
-        <Text size="xl" fw="bold">
+        <Text
+          size="xl"
+          fw={900}
+          c="white"
+          className={titleClasses.titleUnderline}
+        >
           {product.name}
+        </Text>
+        <Text ta="center" c="white" lineClamp={3}>
+          {product.oneLiner}
         </Text>
       </Stack>
     </Card>

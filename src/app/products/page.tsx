@@ -1,5 +1,6 @@
 "use client";
 
+import classes from "~/styles/title.module.css";
 import Shell, { navLinks } from "@frontend/_components/shell";
 import { Button, Group, Stack, Title } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
@@ -11,12 +12,16 @@ export default function Products() {
     <Shell
       page={
         <Stack>
-          <Group justify="space-between">
-            <Title order={1}>GovTech Products</Title>
+          <Group justify="space-between" mb="md">
+            <Title order={1} c="white" className={classes.titleUnderline}>
+              GovTech Products
+            </Title>
             <Button
               component={Link}
               href={navLinks.createProducts!.link}
               leftSection={<IconPlus />}
+              variant="gradient"
+              gradient={{ from: "indigo", to: "violet", deg: 90 }}
             >
               Create
             </Button>

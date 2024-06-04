@@ -1,13 +1,38 @@
 .card {
-  @mixin light {
-    &:hover {
-      background-color: var(--mantine-color-gray-0);
-    }
-  }
+  background: rgb(32, 10, 43);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
 
-  @mixin dark {
-    &:hover {
-      background-color: var(--mantine-color-gray-8);
-    }
+  @mixin hover {
+    background: rgba(51, 16, 68, 0.5);
   }
+}
+
+.staticCard {
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.gradientCardA {
+  background-image: linear-gradient(120deg, #a6c0fe 0%, #f68084 100%);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow:
+    20px 20px 60px #bebebe,
+    -20px -20px 60px #ffffff;
+}
+
+.gradientCardB {
+  background-image: linear-gradient(120deg, #fccb90 0%, #d57eeb 100%);
+}
+
+.gradientC {
+  background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
 }

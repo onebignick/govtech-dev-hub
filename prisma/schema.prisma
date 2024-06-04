@@ -7,13 +7,34 @@ datasource db {
   url      = env("POSTGRES_URL")
 }
 
+enum ProductType {
+  PRODUCT
+  AGENCY
+  PROTOTYPE
+  INNERSOURCE
+}
+
 model User {
-  id          String     @id @default(cuid())
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  clerkUserId String?    @unique
-  blogPosts   BlogPost[]
-  products    Product[]  @relation("ProductToUser")
+  id             String        @id @default(cuid())
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  clerkUserId    String?       @unique
+  blogPosts      BlogPost[]
+  ideas          Idea[]
+  products       Product[]     @relation("ProductToUser")
+  upvotedIdeas   Idea[]        @relation("UpvotedIdea")
+  downvotedIdeas Idea[]        @relation("DownvotedIdea")
+  ideaComments   IdeaComment[]
+  contact        Contact[]
+}
+
+model Contact {
+  id       Int       @id @default(autoincrement())
+  name     String
+  email    String
+  user     User?     @relation(fields: [userID], references: [id])
+  userID   String
+  products Product[] @relation("ProductContacts")
 }
 
 model Image {
@@ -42,6 +63,8 @@ model BlogPost {
 model Product {
   id         String      @id
   name       String
+  type       ProductType 
+  oneLiner   String 
   summary    String
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
@@ -50,8 +73,9 @@ model Product {
   admins     User[]      @relation("ProductToUser")
   logo       Image       @relation("ProductLogo", fields: [logoId], references: [id])
   logoId     String      @unique
-  cover      Image       @relation("ProductCover", fields: [coverId], references: [id])
-  coverId    String      @unique
+  cover      Image?      @relation("ProductCover", fields: [coverId], references: [id])
+  coverId    String?     @unique
+  contacts   Contact[]   @relation("ProductContacts")
 
   @@index([name])
 }
@@ -70,4 +94,34 @@ model Changelog {
   changes   String[]
   productId String
   product   Product  @relation(fields: [productId], references: [id])
+}
+
+model Idea {
+  id        String        @id
+  title     String
+  content   String
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  creator   User          @relation(fields: [creatorID], references: [id])
+  creatorID String
+  upvoted   User[]        @relation("UpvotedIdea")
+  downvoted User[]        @relation("DownvotedIdea")
+  comments  IdeaComment[]
+
+  @@index([title])
+}
+
+model IdeaComment {
+  id        Int           @id @default(autoincrement())
+  content   String
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  isAnswer  Boolean?
+  author    User          @relation(fields: [authorID], references: [id])
+  authorID  String
+  idea      Idea          @relation(fields: [ideaID], references: [id])
+  ideaID    String
+  replyToID Int?          @unique
+  replyTo   IdeaComment?  @relation("IdeaComments", fields: [replyToID], references: [id])
+  replies   IdeaComment[] @relation("IdeaComments")
 }

@@ -6,6 +6,7 @@ import { Stack, Title } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { ProductForm } from "~/app/_components/products/product-form";
 import { api } from "~/trpc/react";
+import classes from "~/styles/title.module.css";
 
 export default function CreateNewProduct() {
   const router = useRouter();
@@ -22,7 +23,9 @@ export default function CreateNewProduct() {
       backLink={navLinks.products}
       page={
         <Stack>
-          <Title order={1}>Create New</Title>
+          <Title order={1} c="white" className={classes.titleUnderline}>
+            Create New
+          </Title>
           <ProductForm
             submitForm={(values) => {
               createProductMutation.mutate(

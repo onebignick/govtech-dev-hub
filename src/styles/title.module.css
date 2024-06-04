@@ -1,0 +1,5 @@
+.titleUnderline {
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(25deg, #fbc2eb 0%, #a6c1ee 100%);
+  border-image-slice: 1;
+}

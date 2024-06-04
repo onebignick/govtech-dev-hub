@@ -3,9 +3,28 @@ import "@mantine/core/styles.css";
 import "@uploadthing/react/styles.css";
 import "@mantine/dropzone/styles.css";
 
-import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { ColorSchemeScript, MantineProvider, createTheme } from "@mantine/core";
 import { ClerkProvider } from "@clerk/nextjs";
 import { TRPCReactProvider } from "~/trpc/react";
+import { Raleway } from "next/font/google";
+
+const font = Raleway({ subsets: ["latin"] });
+
+const theme = createTheme({
+  fontFamily: font.style.fontFamily,
+  headings: {
+    sizes: {
+      h1: {
+        fontWeight: "800",
+        fontSize: "3em",
+      },
+      h2: {
+        fontWeight: "800",
+        fontSize: "2.5em",
+      },
+    },
+  },
+});
 
 export default function RootLayout({
   children,
@@ -20,7 +39,9 @@ export default function RootLayout({
         </head>
         <body>
           <TRPCReactProvider>
-            <MantineProvider>{children}</MantineProvider>
+            <MantineProvider theme={theme} defaultColorScheme="dark">
+              {children}
+            </MantineProvider>
           </TRPCReactProvider>
         </body>
       </html>

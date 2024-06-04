@@ -10,7 +10,7 @@ import Link from "next/link";
 import { IconChevronLeft } from "@tabler/icons-react";
 import React from "react";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { LightDarkModeButton } from "./light-dark-mode-btn";
+import classes from "~/styles/shell.module.css";
 
 interface ShellProps {
   page: ReactNode;
@@ -48,15 +48,21 @@ export default function Shell({ page, backLink }: ShellProps) {
   const [opened, { toggle }] = useDisclosure();
 
   return (
-    <AppShell header={{ height: "8vh" }} padding="md">
-      <AppShell.Header>
+    <AppShell padding="md">
+      <AppShell.Main className={classes.wrapper}>
         <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-        <Group align="center" justify="space-between" h="8vh" mr="md">
+        <Group
+          className={classes.navlinks}
+          align="center"
+          justify="space-between"
+          h="8vh"
+          mr="md"
+        >
           <Link href="/">
             <Image
               component={NextImage}
               src={logo}
-              h="4vh"
+              h="6vh"
               w="auto"
               fit="contain"
               alt="Logo"
@@ -72,28 +78,31 @@ export default function Shell({ page, backLink }: ShellProps) {
                 .filter((link) => link.inNavbar)
                 .map((link) => (
                   <Link href={link.link} key={link.title}>
-                    <Button variant="subtle">{link.title}</Button>
+                    <Button
+                      classNames={{ root: classes.navlinks }}
+                      variant="transparent"
+                    >
+                      {link.title}
+                    </Button>
                   </Link>
                 ))}
               <UserButton />
             </SignedIn>
-            <LightDarkModeButton />
           </Group>
         </Group>
-      </AppShell.Header>
-      <AppShell.Main bg="var(--mantine-color-body)">
-        {backLink && (
-          <Button
-            leftSection={<IconChevronLeft />}
-            component={Link}
-            variant="subtle"
-            href={backLink.link}
-            size="compact-md"
-          >
-            Back
-          </Button>
-        )}
         <Box mx="auto" w="70vw">
+          {backLink && (
+            <Button
+              leftSection={<IconChevronLeft />}
+              component={Link}
+              href={backLink.link}
+              size="compact-md"
+              variant="gradient"
+              gradient={{ from: "indigo", to: "violet", deg: 90 }}
+            >
+              Back
+            </Button>
+          )}
           {page}
         </Box>
       </AppShell.Main>
