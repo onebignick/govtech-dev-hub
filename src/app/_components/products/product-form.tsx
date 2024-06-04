@@ -12,6 +12,7 @@ import { ProductFeaturesInput } from "./product-features-input";
 import { ProductChangelogsInput } from "./product-changelogs-input";
 import { UploadInput } from "../upload-input";
 import { ProductLinksInput } from "./product-links-input";
+import { ProductContactsInput } from "./product-contacts-input";
 
 export function ProductForm({
   initialValues,
@@ -31,6 +32,7 @@ export function ProductForm({
       links: initialValues?.links ?? [],
       features: initialValues?.features ?? [],
       changelogs: initialValues?.changelogs ?? [],
+      contacts: initialValues?.contacts ?? [],
       admins: [],
       logo: "",
       cover: "",
@@ -109,6 +111,7 @@ export function ProductForm({
         <ProductLinksInput form={form} />
         <ProductFeaturesInput form={form} />
         <ProductChangelogsInput form={form} />
+        <ProductContactsInput form={form} />
         <Group justify="flex-end" mt="md">
           <Button
             type="submit"

@@ -28,6 +28,7 @@ const inputProduct = z.object({
       changes: z.array(z.string()),
     }),
   ),
+  contacts: z.array(z.object({ name: z.string(), email: z.string().email() })),
   admins: z.array(z.string()),
   logo: z.string(),
   cover: z.string().optional(),
@@ -38,6 +39,7 @@ export type ProductInput = z.infer<typeof inputProduct>;
 export type Product = Prisma.ProductGetPayload<{
   include: {
     links: true;
+    contacts: true;
     features: true;
     changelogs: true;
     logo: true;
@@ -53,6 +55,7 @@ export const productRouter = createTRPCRouter({
         where: { id: input.id },
         include: {
           links: true,
+          contacts: true,
           features: true,
           changelogs: true,
           logo: true,

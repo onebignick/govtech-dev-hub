@@ -8,11 +8,13 @@ import {
   Card,
   SimpleGrid,
   Timeline,
+  Button,
 } from "@mantine/core";
 import { type Product } from "~/server/api/routers/product";
 import cardClasses from "~/styles/card.module.css";
 import titleClasses from "~/styles/title.module.css";
 import { type Changelog, type Feature } from "@prisma/client";
+import Link from "next/link";
 
 export function ProductPage({ product }: { product: Product }) {
   const FeatureDisplay = ({ feature }: { feature: Feature }) => (
@@ -74,6 +76,20 @@ export function ProductPage({ product }: { product: Product }) {
       <Text size="lg" fw="500">
         {product.summary}
       </Text>
+      {product.links.length > 0 && (
+        <Group>
+          {product.links.map((link, index) => (
+            <Button
+              variant="light"
+              key={`${link.label}.${index}`}
+              component={Link}
+              href={link.url}
+            >
+              {link.label}
+            </Button>
+          ))}
+        </Group>
+      )}
       <Image src={product.cover?.url} alt={`${product.name} Cover`} />
       <Space h="md" />
       <Title order={2} c="white">
