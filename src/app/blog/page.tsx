@@ -1,5 +1,6 @@
 "use client";
 
+import classes from "~/styles/title.module.css";
 import Shell, { navLinks } from "@frontend/_components/shell";
 import { Button, Group, Stack, Title } from "@mantine/core";
 import { IconPencil } from "@tabler/icons-react";
@@ -12,13 +13,17 @@ export default function BlogPosts() {
       page={
         <Stack>
           <Group justify="space-between">
-            <Title order={1}>Dev Blog</Title>
+            <Title order={1} c="white" className={classes.titleUnderline}>
+              Dev Blog
+            </Title>
             <Button
               component={Link}
               href={navLinks.createBlogPost!.link}
               leftSection={<IconPencil />}
+              variant="gradient"
+              gradient={{ from: "indigo", to: "violet", deg: 90 }}
             >
-              New Post
+              Create
             </Button>
           </Group>
           <BlogPostList />
