@@ -23,7 +23,9 @@ export function ProductForm({
     mode: "uncontrolled",
     initialValues: {
       id: initialValues?.id ?? "",
+      type: initialValues?.type ?? "PRODUCT",
       name: initialValues?.name ?? "",
+      oneLiner: initialValues?.oneLiner ?? "",
       summary: initialValues?.summary ?? "",
       features: initialValues?.features ?? [],
       changelogs: initialValues?.changelogs ?? [],
@@ -32,6 +34,7 @@ export function ProductForm({
       cover: "",
     },
     validate: {
+      id: isNotEmpty("Name is required"),
       name: isNotEmpty("Name is required"),
     },
   });
@@ -49,9 +52,10 @@ export function ProductForm({
           label="Type"
           description="Is it a full GovTech product? A one-time project for an agency? Or a cool Innersource package?"
           data={[
-            { label: "Product", value: "product" },
-            { label: "Agency Project", value: "agencyproject" },
-            { label: "Innersource Project", value: "innersource" },
+            { label: "GovTech Product", value: "PRODUCT" },
+            { label: "Agency Project", value: "PROJECT" },
+            { label: "Prototype", value: "PROTOTYPE" },
+            { label: "Innersource Project", value: "INNERSOURCE" },
           ]}
           {...form.getInputProps("type")}
         />
@@ -69,6 +73,14 @@ export function ProductForm({
           placeholder="e.g. SHIP-HATS"
           key={form.key("name")}
           {...form.getInputProps("name")}
+        />
+        <TextInput
+          withAsterisk
+          label="One-Liner"
+          description="A short single line description."
+          placeholder="e.g. SHIP-HATS is a suite of development tools"
+          key={form.key("oneLiner")}
+          {...form.getInputProps("oneLiner")}
         />
         <Group align="flex-start" grow>
           <UploadInput

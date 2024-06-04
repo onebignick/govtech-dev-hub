@@ -6,7 +6,9 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 const inputProduct = z.object({
   id: z.string(),
+  type: z.enum(["PRODUCT", "AGENCY", "PROTOTYPE", "INNERSOURCE"]),
   name: z.string().min(1).max(32),
+  oneLiner: z.string(),
   summary: z.string(),
   features: z.array(
     z.object({
@@ -22,7 +24,7 @@ const inputProduct = z.object({
   ),
   admins: z.array(z.string()),
   logo: z.string(),
-  cover: z.string(),
+  cover: z.string().optional(),
 });
 
 export type ProductInput = z.infer<typeof inputProduct>;
@@ -62,16 +64,20 @@ export const productRouter = createTRPCRouter({
           aspectRatio: 1,
           resize: "scale",
         }),
-        cloudinaryUploader.upload(input.cover, {
-          width: 1500,
-          aspectRatio: 16 / 9,
-          resize: "scale",
-        }),
+        input.cover
+          ? cloudinaryUploader.upload(input.cover, {
+              width: 1500,
+              aspectRatio: 16 / 9,
+              resize: "scale",
+            })
+          : null,
       ]).then((responses) => {
         return ctx.db.product.create({
           data: {
             id: input.id,
+            type: input.type,
             name: input.name,
+            oneLiner: input.oneLiner,
             summary: input.summary,
             features: {
               create: input.features,
@@ -96,15 +102,17 @@ export const productRouter = createTRPCRouter({
                 secureUrl: responses[0].secure_url,
               },
             },
-            cover: {
-              create: {
-                publicId: responses[1].public_id,
-                version: `${responses[1].version}`,
-                format: responses[1].format,
-                url: responses[1].url,
-                secureUrl: responses[1].secure_url,
-              },
-            },
+            cover: responses[1]
+              ? {
+                  create: {
+                    publicId: responses[1].public_id,
+                    version: `${responses[1].version}`,
+                    format: responses[1].format,
+                    url: responses[1].url,
+                    secureUrl: responses[1].secure_url,
+                  },
+                }
+              : {},
           },
         });
       });

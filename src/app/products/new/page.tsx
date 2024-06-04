@@ -22,7 +22,7 @@ export default function CreateNewProduct() {
     <Shell
       backLink={navLinks.products}
       page={
-        <Stack>
+        <Stack align="flex-start">
           <Title order={1} c="white" className={classes.titleUnderline}>
             Create New
           </Title>
