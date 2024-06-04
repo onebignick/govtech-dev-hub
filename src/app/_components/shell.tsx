@@ -42,6 +42,12 @@ export const navLinks: Record<string, Link> = {
     link: "/blog/new",
     inNavbar: false,
   },
+  ideas: { title: "Ideas", link: "/ideas", inNavbar: true },
+  createIdea: {
+    title: "Create Idea",
+    link: "/ideas/new",
+    inNavbar: false,
+  },
 };
 
 export default function Shell({ page, backLink }: ShellProps) {
@@ -90,7 +96,7 @@ export default function Shell({ page, backLink }: ShellProps) {
             </SignedIn>
           </Group>
         </Group>
-        <Box mx="auto" w="70vw">
+        <Box mx="auto" mt="xl" w="70vw">
           {backLink && (
             <Button
               leftSection={<IconChevronLeft />}

@@ -3,3 +3,11 @@
   border-image: linear-gradient(25deg, #fbc2eb 0%, #a6c1ee 100%);
   border-image-slice: 1;
 }
+
+.hoverWhiteText {
+  color: white;
+
+  @mixin hover {
+    color: rgba(255, 255, 255, 0.5);
+  }
+}

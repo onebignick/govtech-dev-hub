@@ -106,7 +106,7 @@ model Changelog {
 }
 
 model Idea {
-  id        String        @id
+  id        Int           @id @default(autoincrement())
   title     String
   content   String
   createdAt DateTime      @default(now())
@@ -129,7 +129,7 @@ model IdeaComment {
   author    User          @relation(fields: [authorID], references: [id])
   authorID  String
   idea      Idea          @relation(fields: [ideaID], references: [id])
-  ideaID    String
+  ideaID    Int
   replyToID Int?          @unique
   replyTo   IdeaComment?  @relation("IdeaComments", fields: [replyToID], references: [id])
   replies   IdeaComment[] @relation("IdeaComments")
