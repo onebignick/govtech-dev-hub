@@ -21,6 +21,14 @@ const theme = createTheme({
         fontWeight: "800",
         fontSize: "2.5em",
       },
+      h3: {
+        fontWeight: "800",
+        fontSize: "2em",
+      },
+      h4: {
+        fontWeight: "800",
+        fontSize: "1.5em",
+      },
     },
   },
 });

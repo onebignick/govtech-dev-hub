@@ -5,6 +5,7 @@ import { isNotEmpty, useForm } from "@mantine/form";
 import { IconFile } from "@tabler/icons-react";
 import { Editor } from "~/app/_components/editor";
 import { type BlogPostInput } from "~/server/api/routers/blogPost";
+import { UploadInput } from "../upload-input";
 
 export function BlogPostForm({
   initialValues = null,
@@ -18,11 +19,13 @@ export function BlogPostForm({
     initialValues: initialValues ?? {
       title: "",
       content: "",
+      cover: "",
       author: "",
     },
     validate: {
       title: isNotEmpty("Summary is required"),
       content: isNotEmpty("Content is required"),
+      cover: isNotEmpty("Cover is required"),
     },
   });
 
@@ -36,11 +39,11 @@ export function BlogPostForm({
           key={form.key("title")}
           {...form.getInputProps("title")}
         />
-        <FileInput
-          withAsterisk
-          leftSection={<IconFile />}
-          label="Cover Image"
-          placeholder="Click to upload file"
+        <UploadInput
+          label="Cover"
+          description="Upload a cover image"
+          key={form.key("cover")}
+          {...form.getInputProps("cover")}
         />
         <Editor
           withAsterisk
@@ -49,7 +52,13 @@ export function BlogPostForm({
           {...form.getInputProps("content")}
         />
         <Group justify="flex-end" mt="md">
-          <Button type="submit">Submit</Button>
+          <Button
+            type="submit"
+            variant="gradient"
+            gradient={{ from: "indigo", to: "violet", deg: 90 }}
+          >
+            Submit
+          </Button>
         </Group>
       </Stack>
     </form>
