@@ -10,7 +10,7 @@ export async function generateMetadata({
 }) {
   return api.product
     .get({
-      id: params.productID,
+      id: decodeURI(params.productID),
     })
     .then((product) => ({
       title: product?.name,
@@ -27,7 +27,7 @@ export default async function ProductServerPage({
     <Suspense fallback={<LoaderShell />}>
       {api.product
         .get({
-          id: params.productID,
+          id: decodeURI(params.productID),
         })
         .then((product) =>
           product ? <ProductComponent product={product} /> : null,

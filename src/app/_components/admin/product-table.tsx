@@ -9,12 +9,22 @@ import {
   rem,
   Stack,
   Title,
+  Badge,
 } from "@mantine/core";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import Link from "next/link";
 import { api } from "~/trpc/react";
 import { type Product } from "@prisma/client";
 import Shell, { navLinks } from "../shell";
+import titleClasses from "~/styles/title.module.css";
+
+const typeColors: Record<string, string> = {
+  PRODUCT: "blue",
+  AGENCY: "cyan",
+  DEVTOOLS: "red",
+  INNERSOURCE: "pink",
+  PROTOTYPE: "purple",
+};
 
 export function ProductsTable({ products }: { products: Product[] }) {
   const utils = api.useUtils();
@@ -32,31 +42,27 @@ export function ProductsTable({ products }: { products: Product[] }) {
   const rows = products.map((product) => (
     <Table.Tr key={product.id}>
       <Table.Td>
-        <Group gap="sm">
-          <Avatar size={30} radius={30} />
-          <Text fz="sm" fw={500}>
-            {product.name}
-          </Text>
-        </Group>
+        <Text fz="sm">{product.id}</Text>
+      </Table.Td>
+      <Table.Td>
+        <Text fz="sm" fw={500}>
+          {product.name}
+        </Text>
       </Table.Td>
 
       <Table.Td>
-        {/* 
         <Badge color={typeColors[product.type.toLowerCase()]} variant="light">
           {product.type}
-        </Badge>   */}
+        </Badge>
       </Table.Td>
       <Table.Td></Table.Td>
-      <Table.Td>
-        <Text fz="sm"></Text>
-      </Table.Td>
       <Table.Td>
         <Group gap={0} justify="flex-end">
           <ActionIcon
             variant="subtle"
             color="gray"
             component={Link}
-            href={`/admin/products/edit/${product.id}`}
+            href={`/products/${product.id}/edit/`}
           >
             <IconPencil
               style={{ width: rem(16), height: rem(16) }}
@@ -83,15 +89,17 @@ export function ProductsTable({ products }: { products: Product[] }) {
       backLink={navLinks.admin}
       page={
         <Stack>
-          <Title order={1}>Product Management</Title>
+          <Title order={1} c="white" className={titleClasses.titleUnderline}>
+            Product Management
+          </Title>
           <Table.ScrollContainer minWidth={800}>
             <Table verticalSpacing="sm">
               <Table.Thead>
                 <Table.Tr>
+                  <Table.Th>ID</Table.Th>
                   <Table.Th>Product</Table.Th>
                   <Table.Th>Type</Table.Th>
-                  <Table.Th>Email</Table.Th>
-                  <Table.Th>Role</Table.Th>
+                  <Table.Th>Organisation</Table.Th>
                   <Table.Th />
                 </Table.Tr>
               </Table.Thead>

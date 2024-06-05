@@ -56,7 +56,7 @@ export function ProductForm({
       })}
     >
       <Stack>
-        <Group grow>
+        <Group grow align="flex-start">
           <NativeSelect
             withAsterisk
             key={form.key("type")}
@@ -79,6 +79,7 @@ export function ProductForm({
           placeholder="e.g. ship-hats"
           description="Only accepts lowercase letters and numbers. No spaces or uppercase."
           key={form.key("id")}
+          disabled={initialValues !== null && initialValues !== undefined}
           {...form.getInputProps("id")}
         />
         <TextInput
