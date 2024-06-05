@@ -6,7 +6,7 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 const inputProduct = z.object({
   id: z.string(),
-  type: z.enum(["PRODUCT", "AGENCY", "PROTOTYPE", "INNERSOURCE"]),
+  type: z.enum(["PRODUCT", "AGENCY", "DEVTOOL", "INNERSOURCE", "PROTOTYPE"]),
   name: z.string().min(1).max(32),
   oneLiner: z.string(),
   summary: z.string(),

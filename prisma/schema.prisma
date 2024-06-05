@@ -39,15 +39,16 @@ model Contact {
 }
 
 model Image {
-  id        String    @id @default(cuid())
-  publicId  String    @unique
+  id        String        @id @default(cuid())
+  publicId  String        @unique
   format    String
   version   String
   url       String
   secureUrl String
-  logoFor   Product?  @relation("ProductLogo")
-  coverFor  Product?  @relation("ProductCover")
-  blogPost  BlogPost? @relation("BlogCover")
+  logoFor   Product?      @relation("ProductLogo")
+  coverFor  Product?      @relation("ProductCover")
+  blogPost  BlogPost?     @relation("BlogCover")
+  orgLogo   Organisation? @relation("OrgLogo")
 }
 
 model BlogPost {
@@ -106,10 +107,13 @@ model Product {
 model Organisation {
   id       String         @id
   name     String
+  acronym  String
   parentID String?        @unique
   parent   Organisation?  @relation("ParentOrganisation", fields: [parentID], references: [id])
   children Organisation[] @relation("ParentOrganisation")
   products Product[]      @relation("OrganisationProduct")
+  logo     Image?         @relation("OrgLogo", fields: [logoId], references: [id])
+  logoId   String?        @unique
 }
 
 model ProductCategory {

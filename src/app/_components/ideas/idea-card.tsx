@@ -10,9 +10,7 @@ import {
 } from "@mantine/core";
 import cardClasses from "~/styles/card.module.css";
 import titleClasses from "~/styles/title.module.css";
-import Link from "next/link";
-import { navLinks } from "../shell";
-import { IconArrowDown, IconArrowUp, IconPencil } from "@tabler/icons-react";
+import { IconArrowUp, IconPencil } from "@tabler/icons-react";
 import { useAuth } from "@clerk/nextjs";
 import { type Idea } from "~/server/api/routers/idea";
 import { api } from "~/trpc/react";
