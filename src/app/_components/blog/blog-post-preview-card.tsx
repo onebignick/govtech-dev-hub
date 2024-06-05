@@ -5,6 +5,7 @@ import cardClasses from "~/styles/card.module.css";
 import { navLinks } from "../shell";
 import { UserDisplay } from "../userDisplay";
 import { DateTime } from "luxon";
+import { DateBadge } from "../date-badge";
 
 export function BlogPostPreviewCard({ blogPost }: { blogPost: BlogPost }) {
   return (
@@ -23,14 +24,7 @@ export function BlogPostPreviewCard({ blogPost }: { blogPost: BlogPost }) {
           {blogPost.title}
         </Text>
         <Group>
-          <Badge
-            variant="gradient"
-            gradient={{ from: "violet", to: "indigo", deg: 90 }}
-          >
-            {DateTime.fromJSDate(blogPost.createdAt).toLocaleString(
-              DateTime.DATE_MED,
-            )}
-          </Badge>
+          <DateBadge date={blogPost.createdAt} format={DateTime.DATE_MED} />
           <UserDisplay userID={blogPost.authorID} />
         </Group>
       </Stack>

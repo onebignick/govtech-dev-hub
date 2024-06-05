@@ -1,62 +1,39 @@
-"use client";
-
-import Shell, { navLinks } from "@frontend/_components/shell";
-import { Stack, Title, Text, Image, Badge, Space } from "@mantine/core";
-import { MarkdownDisplay } from "~/app/_components/markdown";
-import { api } from "~/trpc/react";
-import classes from "~/styles/title.module.css";
-import { DateTime } from "luxon";
-import { UserDisplay } from "~/app/_components/userDisplay";
 import { LoaderShell } from "~/app/_components/loader";
+import { Suspense } from "react";
+import { api } from "~/trpc/server";
+import BlogPostDisplay from "~/app/_components/blog/blog-post";
 
-export default function AdminEditProduct({
+export async function generateMetadata({
   params,
 }: {
   params: { blogID: string };
 }) {
-  const blogPostRes = api.blogPost.get.useQuery({
-    id: decodeURI(params.blogID),
-  });
+  return api.blogPost
+    .getMetadata({
+      id: decodeURI(params.blogID),
+    })
+    .then((blogPost) => {
+      console.log(blogPost);
+      return {
+        title: blogPost?.title,
+      };
+    });
+}
 
-  if (!blogPostRes.data) {
-    return <LoaderShell />;
-  }
-
-  const blogPost = blogPostRes.data;
-
+export default async function BlogPost({
+  params,
+}: {
+  params: { blogID: string };
+}) {
   return (
-    <Shell
-      backLink={navLinks.blog}
-      page={
-        <Stack my="xl" gap={0}>
-          <Image
-            src={blogPost.cover!.url}
-            alt={`Cover for ${blogPost.title}`}
-            my="lg"
-          />
-          <Badge
-            variant="gradient"
-            gradient={{ from: "violet", to: "indigo", deg: 90 }}
-            mb="md"
-          >
-            {DateTime.fromJSDate(blogPost.createdAt).toLocaleString(
-              DateTime.DATE_MED,
-            )}
-          </Badge>
-          <Title
-            order={1}
-            c="white"
-            lh={1}
-            mb="lg"
-            className={classes.titleUnderline}
-          >
-            {blogPost.title}
-          </Title>
-          <UserDisplay userID={blogPost.authorID} />
-          <Space h="md" />
-          <MarkdownDisplay markdown={blogPost.content} />
-        </Stack>
-      }
-    />
+    <Suspense fallback={<LoaderShell />}>
+      {api.blogPost
+        .get({
+          id: decodeURI(params.blogID),
+        })
+        .then((blogPost) => (
+          <BlogPostDisplay blogPost={blogPost} />
+        ))}
+    </Suspense>
   );
 }

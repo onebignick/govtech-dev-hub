@@ -1,55 +1,37 @@
-"use client";
-
-import Shell, { navLinks } from "@frontend/_components/shell";
-import { Button, Group, Stack } from "@mantine/core";
-import { IconChevronLeft } from "@tabler/icons-react";
-import Link from "next/link";
+import { Suspense } from "react";
 import { LoaderShell } from "~/app/_components/loader";
-import { ProductPage } from "~/app/_components/products/product-page";
-import { api } from "~/trpc/react";
+import ProductComponent from "~/app/_components/products/product";
+import { api } from "~/trpc/server";
 
-export default function AdminEditProduct({
+export async function generateMetadata({
   params,
 }: {
   params: { productID: string };
 }) {
-  const productRes = api.product.get.useQuery({
-    id: params.productID,
-  });
+  return api.product
+    .get({
+      id: params.productID,
+    })
+    .then((product) => ({
+      title: product?.name,
+      description: product?.oneLiner,
+    }));
+}
 
-  if (!productRes.data) {
-    return <LoaderShell />;
-  }
-
-  const product = productRes.data;
-
+export default async function ProductServerPage({
+  params,
+}: {
+  params: { productID: string };
+}) {
   return (
-    <Shell
-      page={
-        <Stack>
-          <Group>
-            <Button
-              variant="light"
-              leftSection={<IconChevronLeft />}
-              component={Link}
-              href={navLinks.products!.link}
-              size="compact-md"
-            >
-              Back to All Products
-            </Button>
-            <Button
-              variant="light"
-              leftSection={<IconChevronLeft />}
-              component={Link}
-              href={navLinks.guides!.link}
-              size="compact-md"
-            >
-              Back to Product Catalog
-            </Button>
-          </Group>
-          {product && <ProductPage product={product} />}
-        </Stack>
-      }
-    />
+    <Suspense fallback={<LoaderShell />}>
+      {api.product
+        .get({
+          id: params.productID,
+        })
+        .then((product) => (
+          <ProductComponent product={product} />
+        ))}
+    </Suspense>
   );
 }

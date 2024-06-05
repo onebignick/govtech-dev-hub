@@ -51,6 +51,13 @@ export type Product = Prisma.ProductGetPayload<{
   };
 }>;
 
+export type ProductSummary = Prisma.ProductGetPayload<{
+  include: {
+    logo: true;
+    cover: true;
+  };
+}>;
+
 export const productRouter = createTRPCRouter({
   get: publicProcedure
     .input(z.object({ id: z.string() }))
@@ -65,6 +72,13 @@ export const productRouter = createTRPCRouter({
           logo: true,
           cover: true,
         },
+      }),
+    ),
+  getMetadata: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) =>
+      ctx.db.product.findFirst({
+        where: { id: input.id },
       }),
     ),
   getAll: publicProcedure.query(async ({ ctx }) =>

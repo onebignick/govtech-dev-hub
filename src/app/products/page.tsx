@@ -1,34 +1,19 @@
-"use client";
+import Shell from "@frontend/_components/shell";
+import { ProductsList } from "../_components/products/products-list";
+import { api } from "~/trpc/server";
+import { Suspense } from "react";
+import { LoaderShell } from "../_components/loader";
 
-import classes from "~/styles/title.module.css";
-import Shell, { navLinks } from "@frontend/_components/shell";
-import { Button, Group, Stack, Title } from "@mantine/core";
-import { IconPlus } from "@tabler/icons-react";
-import Link from "next/link";
-import { ProductCardsGrid } from "@frontend/_components/products/product-cards-grid";
+export const metadata = {
+  title: "GovTech Products",
+};
 
-export default function Products() {
+export default async function Products() {
   return (
-    <Shell
-      page={
-        <Stack>
-          <Group justify="space-between" mb="md">
-            <Title order={1} c="white" className={classes.titleUnderline}>
-              GovTech Products
-            </Title>
-            <Button
-              component={Link}
-              href={navLinks.createProducts!.link}
-              leftSection={<IconPlus />}
-              variant="gradient"
-              gradient={{ from: "indigo", to: "violet", deg: 90 }}
-            >
-              Create
-            </Button>
-          </Group>
-          <ProductCardsGrid />
-        </Stack>
-      }
-    />
+    <Suspense fallback={<LoaderShell />}>
+      {api.product.getAll().then((products) => (
+        <Shell page={<ProductsList products={products} />} />
+      ))}
+    </Suspense>
   );
 }

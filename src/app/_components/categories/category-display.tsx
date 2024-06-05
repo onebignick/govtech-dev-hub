@@ -81,20 +81,16 @@ function ProductCategoryDisplay({ category }: { category: ProductCategory }) {
   );
 }
 
-export function CategoryDisplay() {
-  const categoryRes = api.category.getAll.useQuery();
-
-  if (!categoryRes.data) {
-    return <LoaderDisplay />;
-  }
-
-  const categories = categoryRes.data;
-
+export function CategoryDisplay({
+  categories,
+}: {
+  categories: ProductCategory[];
+}) {
   return (
-    <Stack>
+    <>
       {categories.map((category) => (
         <ProductCategoryDisplay category={category} key={category.id} />
       ))}
-    </Stack>
+    </>
   );
 }

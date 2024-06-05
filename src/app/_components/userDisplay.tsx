@@ -8,6 +8,10 @@ export function UserDisplay({ userID }: { userID: string }) {
   const [opened, { close, open }] = useDisclosure(false);
   const userRes = api.user.getClerkUser.useQuery(userID);
 
+  if (userRes.error) {
+    console.log(userRes.error);
+  }
+
   if (!userRes.data) {
     return null;
   }

@@ -13,6 +13,8 @@ import { ProductChangelogsInput } from "./product-changelogs-input";
 import { UploadInput } from "../upload-input";
 import { ProductLinksInput } from "./product-links-input";
 import { ProductContactsInput } from "./product-contacts-input";
+import { OrganiationParentInput } from "../organisations/organisation-parent-input";
+import { ProductOrganisationInput } from "./product-organisation-input";
 
 export function ProductForm({
   initialValues,
@@ -40,6 +42,10 @@ export function ProductForm({
     validate: {
       id: isNotEmpty("Name is required"),
       name: isNotEmpty("Name is required"),
+      type: (value, values) =>
+        (values.type === "AGENCY" || "PRODUCT") && value.length > 0
+          ? "Choose an organisation"
+          : null,
     },
   });
 
@@ -50,20 +56,23 @@ export function ProductForm({
       })}
     >
       <Stack>
-        <NativeSelect
-          withAsterisk
-          key={form.key("type")}
-          label="Type"
-          description="Is it a full GovTech product? A one-time project for an agency? Or a cool Innersource package?"
-          data={[
-            { label: "GovTech Product", value: "PRODUCT" },
-            { label: "Agency Project", value: "PROJECT" },
-            { label: "Development Tool", value: "DEVTOOL" },
-            { label: "Innersource Project", value: "INNERSOURCE" },
-            { label: "Prototype", value: "PROTOTYPE" },
-          ]}
-          {...form.getInputProps("type")}
-        />
+        <Group grow>
+          <NativeSelect
+            withAsterisk
+            key={form.key("type")}
+            label="Type"
+            description="Is it a full GovTech product? A one-time project for an agency? Or a cool Innersource package?"
+            data={[
+              { label: "GovTech Product", value: "PRODUCT" },
+              { label: "Agency Project", value: "AGENCY" },
+              { label: "Development Tool", value: "DEVTOOL" },
+              { label: "Innersource Project", value: "INNERSOURCE" },
+              { label: "Prototype", value: "PROTOTYPE" },
+            ]}
+            {...form.getInputProps("type")}
+          />
+          <ProductOrganisationInput form={form} />
+        </Group>
         <TextInput
           withAsterisk
           label="ID"

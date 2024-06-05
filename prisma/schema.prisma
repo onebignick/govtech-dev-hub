@@ -79,24 +79,25 @@ model RunwayStep {
 }
 
 model Product {
-  id            String                @id
-  name          String
-  type          ProductType
-  oneLiner      String
-  summary       String
-  createdAt     DateTime              @default(now())
-  updatedAt     DateTime              @updatedAt
-  links         Link[]
-  changelogs    Changelog[]
-  features      Feature[]
-  admins        User[]                @relation("ProductToUser")
-  logo          Image                 @relation("ProductLogo", fields: [logoId], references: [id])
-  logoId        String                @unique
-  cover         Image?                @relation("ProductCover", fields: [coverId], references: [id])
-  coverId       String?               @unique
-  contacts      Contact[]             @relation("ProductContacts")
-  organisations Organisation[]        @relation("OrganisationProduct")
-  inCategory    ProductCategoryItem[]
+  id             String                @id
+  name           String
+  type           ProductType
+  oneLiner       String
+  summary        String
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+  links          Link[]
+  changelogs     Changelog[]
+  features       Feature[]
+  admins         User[]                @relation("ProductToUser")
+  logo           Image                 @relation("ProductLogo", fields: [logoId], references: [id])
+  logoId         String                @unique
+  cover          Image?                @relation("ProductCover", fields: [coverId], references: [id])
+  coverId        String?               @unique
+  contacts       Contact[]             @relation("ProductContacts")
+  organisation   Organisation?         @relation("OrganisationProduct", fields: [organisationId], references: [id])
+  organisationId String?
+  inCategory     ProductCategoryItem[]
 
   @@index([name])
 }

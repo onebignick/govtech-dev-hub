@@ -7,6 +7,7 @@ import { DateTime } from "luxon";
 import { UserDisplay } from "../userDisplay";
 import { EditIdeaButton } from "./edit-idea-button";
 import { IdeaVotesDisplay } from "./idea-votes-display";
+import { DateBadge } from "../date-badge";
 
 export function IdeaCard({ idea }: { idea: Idea }) {
   const auth = useAuth();
@@ -29,14 +30,7 @@ export function IdeaCard({ idea }: { idea: Idea }) {
             </Group>
             <Group>
               <UserDisplay userID={idea.creatorID} />
-              <Badge
-                variant="gradient"
-                gradient={{ from: "violet", to: "indigo", deg: 90 }}
-              >
-                {DateTime.fromJSDate(idea.createdAt).toLocaleString(
-                  DateTime.DATE_MED,
-                )}
-              </Badge>
+              <DateBadge date={idea.createdAt} format={DateTime.DATE_MED} />
             </Group>
             {idea.content.length > 0 && <Text c="white">{idea.content}</Text>}
           </Stack>

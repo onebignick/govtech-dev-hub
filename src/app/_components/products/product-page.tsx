@@ -60,7 +60,7 @@ export function ProductPage({ product }: { product: Product }) {
   );
 
   return (
-    <Stack align="flex-start">
+    <Stack>
       <Group>
         <Image
           w="10vw"
@@ -69,7 +69,7 @@ export function ProductPage({ product }: { product: Product }) {
           src={product.logo.url}
           alt={`${product.name} Logo`}
         />
-        <Stack gap={0}>
+        <Stack gap={0} align="flex-start">
           <Text>{product.oneLiner}</Text>
           <Title c="white" order={1} className={titleClasses.titleUnderline}>
             {product.name}

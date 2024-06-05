@@ -1,40 +1,27 @@
-import { Stack, Text, Space, Menu, Button } from "@mantine/core";
-import { api } from "~/trpc/react";
+"use client";
+
+import { Stack, Menu, Button } from "@mantine/core";
 import { IdeaCard } from "./idea-card";
 import { useEffect, useState } from "react";
 import { IconClock, IconThumbUp } from "@tabler/icons-react";
 import { type Idea } from "~/server/api/routers/idea";
-import { LoaderDisplay } from "../loader";
 
 enum SortOrder {
   recent,
   votes,
 }
 
-export function IdeasList() {
-  const ideasRes = api.idea.getAll.useQuery();
+export function IdeasList({ ideas }: { ideas: Idea[] }) {
   const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.votes);
-  const [ideas, setIdeas] = useState<Idea[]>([]);
+  const [ideasDisplayed, setIdeas] = useState<Idea[]>(ideas);
 
   useEffect(() => {
-    if (!ideasRes.data) {
-      return;
-    }
-
     if (sortOrder === SortOrder.recent) {
-      setIdeas(
-        [...ideasRes.data].sort((a, b) => (a.createdAt > b.createdAt ? -1 : 0)),
-      );
+      setIdeas([...ideas].sort((a, b) => (a.createdAt > b.createdAt ? -1 : 0)));
     } else if (sortOrder === SortOrder.votes) {
-      setIdeas(
-        [...ideasRes.data].sort((a, b) => b._count.upvoted - a._count.upvoted),
-      );
+      setIdeas([...ideas].sort((a, b) => b._count.upvoted - a._count.upvoted));
     }
-  }, [ideasRes.data, sortOrder]);
-
-  if (!ideasRes.data) {
-    return <LoaderDisplay />;
-  }
+  }, [ideas, sortOrder]);
 
   return (
     <Stack align="flex-start">
@@ -64,7 +51,7 @@ export function IdeasList() {
         </Menu.Dropdown>
       </Menu>
       <Stack w="100%">
-        {ideas.map((idea) => (
+        {ideasDisplayed.map((idea) => (
           <IdeaCard idea={idea} key={idea.id} />
         ))}
       </Stack>

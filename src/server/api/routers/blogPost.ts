@@ -36,6 +36,13 @@ export const blogPostRouter = createTRPCRouter({
         },
       }),
     ),
+  getMetadata: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) =>
+      ctx.db.blogPost.findFirst({
+        where: { id: input.id },
+      }),
+    ),
   getAll: publicProcedure.query(async ({ ctx }) =>
     ctx.db.blogPost.findMany({
       include: {
