@@ -28,9 +28,9 @@ export default async function BlogPost({
         .get({
           id: decodeURI(params.blogID),
         })
-        .then((blogPost) => (
-          <BlogPostDisplay blogPost={blogPost} />
-        ))}
+        .then((blogPost) =>
+          blogPost ? <BlogPostDisplay blogPost={blogPost} /> : null,
+        )}
     </Suspense>
   );
 }

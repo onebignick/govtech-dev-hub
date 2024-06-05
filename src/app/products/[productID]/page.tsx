@@ -29,9 +29,9 @@ export default async function ProductServerPage({
         .get({
           id: params.productID,
         })
-        .then((product) => (
-          <ProductComponent product={product} />
-        ))}
+        .then((product) =>
+          product ? <ProductComponent product={product} /> : null,
+        )}
     </Suspense>
   );
 }
