@@ -54,7 +54,7 @@ export const blogPostRouter = createTRPCRouter({
   create: protectedProcedure
     .input(inputBlogPost)
     .mutation(async ({ ctx, input }) => {
-      const id = input.title.toLowerCase().trim().replace(" ", "-");
+      const id = input.title.toLowerCase().trim().replaceAll(" ", "-");
 
       return cloudinaryUploader
         .upload(input.cover, {

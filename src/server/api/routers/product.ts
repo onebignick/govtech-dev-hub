@@ -36,6 +36,7 @@ const inputProduct = z.object({
   admins: z.array(z.string()),
   logo: z.string(),
   cover: z.string().optional(),
+  organisationId: z.string().optional(),
 });
 
 export type ProductInput = z.infer<typeof inputProduct>;
@@ -49,6 +50,7 @@ export type Product = Prisma.ProductGetPayload<{
     logo: true;
     cover: true;
     admins: true;
+    organisation: true;
   };
 }>;
 
@@ -56,6 +58,7 @@ export type ProductSummary = Prisma.ProductGetPayload<{
   include: {
     logo: true;
     cover: true;
+    organisation: true;
   };
 }>;
 
@@ -73,6 +76,7 @@ export const productRouter = createTRPCRouter({
           logo: true,
           cover: true,
           admins: true,
+          organisation: true,
         },
       }),
     ),
@@ -88,6 +92,7 @@ export const productRouter = createTRPCRouter({
       include: {
         logo: true,
         cover: true,
+        organisation: true,
       },
     }),
   ),
@@ -127,13 +132,15 @@ export const productRouter = createTRPCRouter({
             contacts: {
               create: input.contacts,
             },
+            organisation: input.organisationId
+              ? {
+                  connect: {
+                    id: input.organisationId,
+                  },
+                }
+              : {},
             admins: {
-              connectOrCreate: input.admins.map((admin) => {
-                return {
-                  create: { id: admin },
-                  where: { id: admin },
-                };
-              }),
+              connect: input.admins.map((admin) => ({ id: admin })),
             },
             logo: {
               create: {
@@ -162,14 +169,101 @@ export const productRouter = createTRPCRouter({
   update: protectedProcedure
     .input(inputProduct)
     .mutation(async ({ ctx, input }) =>
-      ctx.db.product.update({
-        data: {
-          id: input.id,
-          name: input.name,
-          summary: input.summary,
-        },
-        where: { id: input.id },
-      }),
+      Promise.all([
+        cloudinaryUploader.upload(input.logo, {
+          width: 1000,
+          aspectRatio: 1,
+          resize: "scale",
+        }),
+        input.cover
+          ? cloudinaryUploader.upload(input.cover, {
+              width: 1500,
+              aspectRatio: 16 / 9,
+              resize: "scale",
+            })
+          : null,
+      ])
+        .then((responses) =>
+          ctx.db.$transaction([
+            ctx.db.feature.deleteMany({
+              where: {
+                productId: input.id,
+              },
+            }),
+            ctx.db.link.deleteMany({
+              where: {
+                productId: input.id,
+              },
+            }),
+            ctx.db.changelog.deleteMany({
+              where: {
+                productId: input.id,
+              },
+            }),
+            ctx.db.contact.deleteMany({
+              where: {
+                productId: input.id,
+              },
+            }),
+            ctx.db.product.update({
+              data: {
+                type: input.type,
+                name: input.name,
+                oneLiner: input.oneLiner,
+                summary: input.summary,
+                links: {
+                  create: input.links,
+                },
+                features: {
+                  create: input.features,
+                },
+                changelogs: {
+                  create: input.changelogs,
+                },
+                contacts: {
+                  create: input.contacts,
+                },
+                organisation: input.organisationId
+                  ? {
+                      connect: {
+                        id: input.organisationId,
+                      },
+                    }
+                  : {},
+                admins: {
+                  connectOrCreate: input.admins.map((admin) => {
+                    return {
+                      create: { id: admin },
+                      where: { id: admin },
+                    };
+                  }),
+                },
+                logo: {
+                  create: {
+                    publicId: responses[0].public_id,
+                    version: `${responses[0].version}`,
+                    format: responses[0].format,
+                    url: responses[0].url,
+                    secureUrl: responses[0].secure_url,
+                  },
+                },
+                cover: responses[1]
+                  ? {
+                      create: {
+                        publicId: responses[1].public_id,
+                        version: `${responses[1].version}`,
+                        format: responses[1].format,
+                        url: responses[1].url,
+                        secureUrl: responses[1].secure_url,
+                      },
+                    }
+                  : {},
+              },
+              where: { id: input.id },
+            }),
+          ]),
+        )
+        .catch((error) => console.log(error)),
     ),
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
@@ -184,13 +278,29 @@ export const productRouter = createTRPCRouter({
           productId: input.id,
         },
       });
+      const deleteLinks = ctx.db.link.deleteMany({
+        where: {
+          productId: input.id,
+        },
+      });
+      const deleteContacts = ctx.db.contact.deleteMany({
+        where: {
+          productId: input.id,
+        },
+      });
 
       const deleteProduct = ctx.db.product.delete({
         where: { id: input.id },
       });
 
       return ctx.db
-        .$transaction([deleteFeatures, deleteChangelogs, deleteProduct])
+        .$transaction([
+          deleteFeatures,
+          deleteChangelogs,
+          deleteLinks,
+          deleteContacts,
+          deleteProduct,
+        ])
         .catch((error) => console.log(error));
     }),
 });

@@ -20,7 +20,7 @@ export function ProductOrganisationInput({
   return (
     <NativeSelect
       withAsterisk
-      key={form.key("organisation")}
+      key={form.key("organisationId")}
       label="Organisation"
       description="GovTech Products & Agency Projects need to include the organisation"
       data={[
@@ -30,7 +30,7 @@ export function ProductOrganisationInput({
           value: organisation.id,
         })),
       ]}
-      {...form.getInputProps("organisation")}
+      {...form.getInputProps("organisationId")}
     />
   );
 }

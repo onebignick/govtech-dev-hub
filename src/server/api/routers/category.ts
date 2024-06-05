@@ -71,12 +71,12 @@ export const categoryRouter = createTRPCRouter({
         ...input.categories.map((category) =>
           ctx.db.productCategory.create({
             data: {
-              id: category.name.toLowerCase().trim().replace(" ", "-"),
+              id: category.name.toLowerCase().trim().replaceAll(" ", "-"),
               name: category.name,
               description: category.description,
               children: {
                 create: category.children.map((child) => ({
-                  id: child.name.toLowerCase().trim().replace(" ", "-"),
+                  id: child.name.toLowerCase().trim().replaceAll(" ", "-"),
                   name: child.name,
                   description: child.description,
                   items: {

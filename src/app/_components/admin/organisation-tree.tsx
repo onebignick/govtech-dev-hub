@@ -1,68 +1,41 @@
-import {
-  Group,
-  type RenderTreeNodePayload,
-  Tree,
-  Card,
-  Text,
-  Stack,
-  Title,
-} from "@mantine/core";
+"use client";
+
+import { Group, Card, Text, Stack, Title } from "@mantine/core";
 import titleClasses from "~/styles/title.module.css";
 import cardClasses from "~/styles/card.module.css";
-import { IconChevronDown } from "@tabler/icons-react";
 import { type Organisation } from "~/server/api/routers/organisation";
 import AddOrganisationButton from "../organisations/add-organisation-button";
 import Shell, { navLinks } from "../shell";
+import EditOrganisationButton from "../organisations/edit-organisation-button";
 
 export function OrganisationTree({
   organisations,
 }: {
   organisations: Organisation[];
 }) {
-  const organisationsTree = organisations
-    .filter((organisations) => !organisations.parentID)
-    .map((organisation) => ({
-      value: organisation.acronym,
-      label: organisation.name,
-      children: organisation.children.map((child) => ({
-        value: child.acronym,
-        label: child.name,
-      })),
-    }));
-
-  function Leaf({
-    node,
-    expanded,
-    hasChildren,
-    elementProps,
-  }: RenderTreeNodePayload) {
+  function OrganisationCard({
+    organisation,
+    isChild = false,
+  }: {
+    organisation: Organisation;
+    isChild?: boolean;
+  }) {
     return (
       <Card
-        key={node.value}
+        key={organisation.id}
         shadow="xs"
-        {...{
-          ...elementProps,
-          className:
-            elementProps.className &&
-            (hasChildren ? cardClasses.card : cardClasses.staticCard),
-        }}
+        className={cardClasses.staticCard}
         my="sm"
+        ml={isChild ? "xl" : undefined}
       >
-        <Group gap={5}>
-          {hasChildren && (
-            <IconChevronDown
-              size={18}
-              style={{
-                transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
-              }}
-            />
-          )}
-          <Text size="h3" c="white" fw={900}>
-            {node.value}
+        <Group>
+          <Text size={isChild ? "h3" : "h2"} c="white" fw={900}>
+            {organisation.acronym}
           </Text>
-          <Text size="md" c="white">
-            {node.label}
+          <Text size={isChild ? "md" : "lg"} c="white">
+            {organisation.name}
           </Text>
+          <EditOrganisationButton organisation={organisation} />
         </Group>
       </Card>
     );
@@ -79,11 +52,22 @@ export function OrganisationTree({
             </Title>
             <AddOrganisationButton />
           </Group>
-          <Tree
-            clearSelectionOnOutsideClick
-            data={organisationsTree}
-            renderNode={(payload) => <Leaf {...payload} />}
-          />
+          {organisations.map((organisation) => (
+            <Stack key={organisation.id} gap={0} mb="md">
+              <OrganisationCard organisation={organisation} />
+              {organisation.children.map((childOrg) => (
+                <OrganisationCard
+                  organisation={{
+                    ...childOrg,
+                    children: [],
+                    logo: null,
+                  }}
+                  key={childOrg.id}
+                  isChild
+                />
+              ))}
+            </Stack>
+          ))}
         </Stack>
       }
     />

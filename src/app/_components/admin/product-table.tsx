@@ -14,9 +14,9 @@ import {
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import Link from "next/link";
 import { api } from "~/trpc/react";
-import { type Product } from "@prisma/client";
 import Shell, { navLinks } from "../shell";
 import titleClasses from "~/styles/title.module.css";
+import { type ProductSummary } from "~/server/api/routers/product";
 
 const typeColors: Record<string, string> = {
   PRODUCT: "blue",
@@ -26,7 +26,7 @@ const typeColors: Record<string, string> = {
   PROTOTYPE: "purple",
 };
 
-export function ProductsTable({ products }: { products: Product[] }) {
+export function ProductsTable({ products }: { products: ProductSummary[] }) {
   const utils = api.useUtils();
   const deleteUserMutation = api.product.delete.useMutation({
     onSuccess() {
@@ -55,7 +55,13 @@ export function ProductsTable({ products }: { products: Product[] }) {
           {product.type}
         </Badge>
       </Table.Td>
-      <Table.Td></Table.Td>
+      <Table.Td>
+        {product.organisation && (
+          <Badge color="blue" variant="light">
+            {product.organisation?.name}
+          </Badge>
+        )}
+      </Table.Td>
       <Table.Td>
         <Group gap={0} justify="flex-end">
           <ActionIcon

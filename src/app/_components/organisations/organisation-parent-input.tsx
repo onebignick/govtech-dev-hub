@@ -19,7 +19,6 @@ export function OrganiationParentInput({
 
   return (
     <NativeSelect
-      withAsterisk
       key={form.key("parent")}
       label="Parent Organisation"
       description="Does this organisation have a parent?"

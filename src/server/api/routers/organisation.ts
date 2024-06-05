@@ -1,3 +1,4 @@
+import { isNotEmpty } from "@mantine/form";
 import { type Prisma } from "@prisma/client";
 import { z } from "zod";
 
@@ -8,6 +9,13 @@ import {
 } from "~/server/api/trpc";
 
 const inputOrganisation = z.object({
+  name: z.string().min(1),
+  acronym: z.string(),
+  parent: z.string().optional(),
+});
+
+const organisation = z.object({
+  id: z.string(),
   name: z.string().min(1),
   acronym: z.string(),
   parent: z.string().optional(),
@@ -29,12 +37,15 @@ export const organisationRouter = createTRPCRouter({
         logo: true,
         children: true,
       },
+      where: {
+        parentID: null,
+      },
     }),
   ),
   create: protectedProcedure
     .input(inputOrganisation)
     .mutation(async ({ ctx, input }) => {
-      const id = input.name.toLowerCase().trim().replace(" ", "-");
+      const id = input.name.toLowerCase().trim().replaceAll(" ", "-");
 
       return ctx.db.organisation.create({
         data: {
@@ -46,6 +57,24 @@ export const organisationRouter = createTRPCRouter({
                 connect: { id: input.parent },
               }
             : {},
+        },
+      });
+    }),
+  edit: protectedProcedure
+    .input(organisation)
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.organisation.update({
+        data: {
+          name: input.name,
+          acronym: input.acronym,
+          parent: input.parent
+            ? {
+                connect: { id: input.parent },
+              }
+            : { disconnect: {} },
+        },
+        where: {
+          id: input.id,
         },
       });
     }),

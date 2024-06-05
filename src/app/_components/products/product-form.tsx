@@ -13,7 +13,6 @@ import { ProductChangelogsInput } from "./product-changelogs-input";
 import { UploadInput } from "../upload-input";
 import { ProductLinksInput } from "./product-links-input";
 import { ProductContactsInput } from "./product-contacts-input";
-import { OrganiationParentInput } from "../organisations/organisation-parent-input";
 import { ProductOrganisationInput } from "./product-organisation-input";
 
 export function ProductForm({
@@ -36,16 +35,21 @@ export function ProductForm({
       changelogs: initialValues?.changelogs ?? [],
       contacts: initialValues?.contacts ?? [],
       admins: [],
-      logo: "",
-      cover: "",
+      logo: initialValues?.logo.url ?? "",
+      cover: initialValues?.cover?.url ?? "",
+      organisationId: initialValues?.organisationId ?? undefined,
     },
     validate: {
-      id: isNotEmpty("Name is required"),
+      id: isNotEmpty("ID is required"),
       name: isNotEmpty("Name is required"),
-      type: (value, values) =>
-        (values.type === "AGENCY" || "PRODUCT") && value.length > 0
-          ? "Choose an organisation"
-          : null,
+      logo: isNotEmpty("Logo is required"),
+      organisationId: (value, values) => {
+        return (values.type === "AGENCY" || "PRODUCT") &&
+          value &&
+          value.length > 0
+          ? null
+          : "Choose an organisation";
+      },
     },
   });
 

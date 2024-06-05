@@ -29,10 +29,11 @@ model User {
 }
 
 model Contact {
-  id       Int       @id @default(autoincrement())
-  name     String
-  email    String
-  products Product[] @relation("ProductContacts")
+  id        Int     @id @default(autoincrement())
+  name      String
+  email     String
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
 }
 
 model Image {
@@ -94,7 +95,7 @@ model Product {
   logoId         String                @unique
   cover          Image?                @relation("ProductCover", fields: [coverId], references: [id])
   coverId        String?               @unique
-  contacts       Contact[]             @relation("ProductContacts")
+  contacts       Contact[]
   organisation   Organisation?         @relation("OrganisationProduct", fields: [organisationId], references: [id])
   organisationId String?
   inCategory     ProductCategoryItem[]
@@ -106,7 +107,7 @@ model Organisation {
   id       String         @id
   name     String
   acronym  String
-  parentID String?        @unique
+  parentID String?
   parent   Organisation?  @relation("ParentOrganisation", fields: [parentID], references: [id])
   children Organisation[] @relation("ParentOrganisation")
   products Product[]      @relation("OrganisationProduct")

@@ -1,9 +1,10 @@
 "use client";
 
-import { Group, Input, Text, rem, Image } from "@mantine/core";
+import { Group, Input, Text, rem, Image, Button } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { IconUpload, IconX, IconPhoto } from "@tabler/icons-react";
 import { useUncontrolled } from "@mantine/hooks";
+import { useEffect } from "react";
 
 interface CustomInputProps {
   label: string;
@@ -29,6 +30,24 @@ export function UploadInput({
     defaultValue,
     onChange,
   });
+
+  useEffect(() => {
+    if (!defaultValue || defaultValue?.length === 0) {
+      return;
+    }
+
+    const xhr = new XMLHttpRequest();
+    xhr.onload = () => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        handleChange(reader.result as string);
+      };
+      reader.readAsDataURL(xhr.response as Blob);
+    };
+    xhr.open("GET", defaultValue);
+    xhr.responseType = "blob";
+    xhr.send();
+  }, [defaultValue]);
 
   return (
     <Input.Wrapper
@@ -111,6 +130,18 @@ export function UploadInput({
           )}
         </Group>
       </Dropzone>
+      {_value.length > 0 && (
+        <Button
+          variant="light"
+          color="gray"
+          onClick={() => {
+            handleChange("");
+          }}
+          mt="md"
+        >
+          Clear
+        </Button>
+      )}
     </Input.Wrapper>
   );
 }
