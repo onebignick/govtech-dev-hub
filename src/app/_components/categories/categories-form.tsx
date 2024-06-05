@@ -32,7 +32,7 @@ export function CategoriesForm({
             description: child.description ?? undefined,
             statement: category.statement ?? undefined,
             children: [],
-            items: category.items.map((item) => ({
+            items: child.items.map((item) => ({
               label: item.label,
               product: item.productId,
             })),
