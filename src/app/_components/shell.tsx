@@ -30,7 +30,7 @@ export const navLinks: Record<string, Link> = {
     link: "/admin/products",
     inNavbar: false,
   },
-  guides: { title: "Guides", link: "/guides", inNavbar: true },
+  guides: { title: "Catalog", link: "/guides", inNavbar: true },
   products: { title: "Products", link: "/products", inNavbar: true },
   createProducts: {
     title: "Create Product",
@@ -104,8 +104,7 @@ export default function Shell({ page, backLink }: ShellProps) {
               component={Link}
               href={backLink.link}
               size="compact-md"
-              variant="gradient"
-              gradient={{ from: "indigo", to: "violet", deg: 90 }}
+              variant="light"
             >
               Back
             </Button>

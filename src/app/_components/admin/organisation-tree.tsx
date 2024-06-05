@@ -8,12 +8,13 @@ import {
 import { api } from "~/trpc/react";
 import cardClasses from "~/styles/card.module.css";
 import { IconChevronDown } from "@tabler/icons-react";
+import { LoaderDisplay } from "../loader";
 
 export function OrganisationTree() {
   const organisationsRes = api.organisation.getAll.useQuery();
 
   if (!organisationsRes.data) {
-    return <div>Loading...</div>;
+    return <LoaderDisplay />;
   }
 
   const organisations = organisationsRes.data;

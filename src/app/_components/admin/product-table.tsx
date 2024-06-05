@@ -2,6 +2,7 @@ import { Avatar, Table, Group, Text, ActionIcon, rem } from "@mantine/core";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import Link from "next/link";
 import { api } from "~/trpc/react";
+import { LoaderDisplay } from "../loader";
 
 export function ProductsTable() {
   const utils = api.useUtils();
@@ -18,7 +19,7 @@ export function ProductsTable() {
   };
 
   if (!products.data) {
-    return <div>Loading...</div>;
+    return <LoaderDisplay />;
   }
 
   const rows = products.data.map((product) => (

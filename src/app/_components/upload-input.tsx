@@ -11,6 +11,7 @@ interface CustomInputProps {
   error?: string;
   value?: string;
   defaultValue?: string;
+  withAsterisk?: boolean;
   onChange?: (value: string) => void;
 }
 
@@ -20,6 +21,7 @@ export function UploadInput({
   error,
   value,
   defaultValue = "",
+  withAsterisk = false,
   onChange,
 }: CustomInputProps) {
   const [_value, handleChange] = useUncontrolled<string>({
@@ -29,7 +31,12 @@ export function UploadInput({
   });
 
   return (
-    <Input.Wrapper label={label} description={description} error={error}>
+    <Input.Wrapper
+      withAsterisk={withAsterisk}
+      label={label}
+      description={description}
+      error={error}
+    >
       <Dropzone
         onDrop={(files) => {
           const file = files.find((f) => f);

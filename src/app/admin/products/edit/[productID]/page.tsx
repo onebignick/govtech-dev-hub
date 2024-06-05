@@ -2,6 +2,7 @@
 
 import Shell, { navLinks } from "@frontend/_components/shell";
 import { Stack, Title } from "@mantine/core";
+import { LoaderShell } from "~/app/_components/loader";
 import { ProductForm } from "~/app/_components/products/product-form";
 import { api } from "~/trpc/react";
 
@@ -22,7 +23,7 @@ export default function AdminEditProduct({
   });
 
   if (!productRes.data) {
-    return <div>Loading...</div>;
+    return <LoaderShell />;
   }
 
   const product = productRes.data;

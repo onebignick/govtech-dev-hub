@@ -7,6 +7,7 @@ import { api } from "~/trpc/react";
 import classes from "~/styles/title.module.css";
 import { DateTime } from "luxon";
 import { UserDisplay } from "~/app/_components/userDisplay";
+import { LoaderShell } from "~/app/_components/loader";
 
 export default function AdminEditProduct({
   params,
@@ -18,7 +19,7 @@ export default function AdminEditProduct({
   });
 
   if (!blogPostRes.data) {
-    return <div>Loading...</div>;
+    return <LoaderShell />;
   }
 
   const blogPost = blogPostRes.data;

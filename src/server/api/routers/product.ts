@@ -108,6 +108,9 @@ export const productRouter = createTRPCRouter({
             changelogs: {
               create: input.changelogs,
             },
+            contacts: {
+              create: input.contacts,
+            },
             admins: {
               connectOrCreate: input.admins.map((admin) => {
                 return {

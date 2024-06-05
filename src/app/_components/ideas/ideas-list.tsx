@@ -4,6 +4,7 @@ import { IdeaCard } from "./idea-card";
 import { useEffect, useState } from "react";
 import { IconClock, IconThumbUp } from "@tabler/icons-react";
 import { type Idea } from "~/server/api/routers/idea";
+import { LoaderDisplay } from "../loader";
 
 enum SortOrder {
   recent,
@@ -32,7 +33,7 @@ export function IdeasList() {
   }, [ideasRes.data, sortOrder]);
 
   if (!ideasRes.data) {
-    return <div>Loading...</div>;
+    return <LoaderDisplay />;
   }
 
   return (

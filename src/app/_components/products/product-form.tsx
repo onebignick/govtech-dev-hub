@@ -58,8 +58,9 @@ export function ProductForm({
           data={[
             { label: "GovTech Product", value: "PRODUCT" },
             { label: "Agency Project", value: "PROJECT" },
-            { label: "Prototype", value: "PROTOTYPE" },
+            { label: "Development Tool", value: "DEVTOOL" },
             { label: "Innersource Project", value: "INNERSOURCE" },
+            { label: "Prototype", value: "PROTOTYPE" },
           ]}
           {...form.getInputProps("type")}
         />
@@ -88,6 +89,7 @@ export function ProductForm({
         />
         <Group align="flex-start" grow>
           <UploadInput
+            withAsterisk
             label="Logo"
             description="Upload a square icon"
             key={form.key("logo")}

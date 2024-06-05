@@ -5,12 +5,13 @@ import classes from "~/styles/cursor.module.css";
 import cardClasses from "~/styles/card.module.css";
 import titleClasses from "~/styles/title.module.css";
 import { api } from "~/trpc/react";
+import { LoaderDisplay } from "../loader";
 
 export function ProductCardsGrid() {
   const products = api.product.getAll.useQuery();
 
   if (!products.data) {
-    return <div>Loading...</div>;
+    return <LoaderDisplay />;
   }
 
   const cards = products.data.map((product) => (

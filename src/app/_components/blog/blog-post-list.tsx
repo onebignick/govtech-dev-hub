@@ -1,13 +1,13 @@
-import { Stack, Title, Text, Space } from "@mantine/core";
-import { type BlogPost } from "@prisma/client";
+import { Stack } from "@mantine/core";
 import { api } from "~/trpc/react";
 import { BlogPostPreviewCard } from "./blog-post-preview-card";
+import { LoaderDisplay } from "../loader";
 
 export function BlogPostList() {
   const blogPostsRes = api.blogPost.getAll.useQuery();
 
   if (!blogPostsRes.data) {
-    return <div>Loading...</div>;
+    return <LoaderDisplay />;
   }
 
   const blogPosts = blogPostsRes.data;

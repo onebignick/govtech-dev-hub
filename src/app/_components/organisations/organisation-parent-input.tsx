@@ -2,6 +2,7 @@ import { NativeSelect } from "@mantine/core";
 import { type UseFormReturnType } from "@mantine/form";
 import { type OrganisationInput } from "~/server/api/routers/organisation";
 import { api } from "~/trpc/react";
+import { LoaderDisplay } from "../loader";
 
 export function OrganiationParentInput({
   form,
@@ -11,7 +12,7 @@ export function OrganiationParentInput({
   const organisationsRes = api.organisation.getAll.useQuery();
 
   if (!organisationsRes.data) {
-    return <div>Loading...</div>;
+    return <LoaderDisplay />;
   }
 
   const organisations = organisationsRes.data;

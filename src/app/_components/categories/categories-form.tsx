@@ -1,13 +1,14 @@
 "use client";
 
-import { Stack, Button, Group, TextInput, Textarea } from "@mantine/core";
-import { isNotEmpty, useForm } from "@mantine/form";
+import { Stack, Button, Group } from "@mantine/core";
+import { useForm } from "@mantine/form";
 import {
-  ProductCategory,
+  type ProductCategory,
   type CategoriesInput,
 } from "~/server/api/routers/category";
 import { ProductCategoriesInput } from "./category-input";
 import { api } from "~/trpc/react";
+import { LoaderDisplay } from "../loader";
 
 export function CategoriesForm({
   initialValues = null,
@@ -51,7 +52,7 @@ export function CategoriesForm({
   const productsRes = api.product.getAll.useQuery();
 
   if (!productsRes.data) {
-    return <div>Loading...</div>;
+    return <LoaderDisplay />;
   }
 
   const products = productsRes.data;

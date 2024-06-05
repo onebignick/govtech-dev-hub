@@ -15,6 +15,7 @@ import {
 } from "~/server/api/routers/category";
 import Link from "next/link";
 import { navLinks } from "../shell";
+import { LoaderDisplay } from "../loader";
 
 function ProductListItem({ item }: { item: ProductCategoryItem }) {
   return (
@@ -26,12 +27,12 @@ function ProductListItem({ item }: { item: ProductCategoryItem }) {
       my="sm"
     >
       <Group justify="space-between" px="xl">
-        <Text size="h3" c="white" fw={500}>
+        <Text size="h3" c="white" fw={800}>
           {item.label}
         </Text>
         <Group>
           <Avatar src={item.product.logo.url} />
-          <Text size="md" c="white" fw={800}>
+          <Text size="md" c="white">
             {item.product.name}
           </Text>
         </Group>
@@ -42,8 +43,8 @@ function ProductListItem({ item }: { item: ProductCategoryItem }) {
 
 function ProductCategoryDisplay({ category }: { category: ProductCategory }) {
   return (
-    <>
-      <Title c="white" order={2}>
+    <Stack gap={0}>
+      <Title c="white" order={2} lh={1} mb={0}>
         {category.name}
       </Title>
       {category.description && category.description?.length > 0 && (
@@ -58,8 +59,8 @@ function ProductCategoryDisplay({ category }: { category: ProductCategory }) {
         <ProductListItem item={item} key={item.id} />
       ))}
       {category.children.map((subCategory) => (
-        <Stack key={subCategory.id} ml="xl">
-          <Title c="white" order={3}>
+        <Stack key={subCategory.id} ml="xl" mt="md" gap={0}>
+          <Title c="white" order={3} lh={1}>
             {subCategory.name}
           </Title>
           {subCategory.description && subCategory.description?.length > 0 && (
@@ -76,7 +77,7 @@ function ProductCategoryDisplay({ category }: { category: ProductCategory }) {
         </Stack>
       ))}
       <Divider color="white" my="md" />
-    </>
+    </Stack>
   );
 }
 
@@ -84,7 +85,7 @@ export function CategoryDisplay() {
   const categoryRes = api.category.getAll.useQuery();
 
   if (!categoryRes.data) {
-    return <div>Loading...</div>;
+    return <LoaderDisplay />;
   }
 
   const categories = categoryRes.data;

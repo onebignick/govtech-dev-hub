@@ -5,6 +5,7 @@ import Shell, { navLinks } from "@frontend/_components/shell";
 import titleClasses from "~/styles/title.module.css";
 import { api } from "~/trpc/react";
 import { CategoriesForm } from "~/app/_components/categories/categories-form";
+import { LoaderShell } from "~/app/_components/loader";
 
 export default function GuideAdmin() {
   const utils = api.useUtils();
@@ -16,7 +17,7 @@ export default function GuideAdmin() {
   });
 
   if (!categoriesRes.data) {
-    return <div>Loading...</div>;
+    return <LoaderShell />;
   }
 
   const categories = categoriesRes.data;
