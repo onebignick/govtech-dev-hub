@@ -12,7 +12,6 @@ export function CloudinaryImage({
 }) {
   const { version, publicId, format } = image;
   const url = `http://res.cloudinary.com/ds6exncwx/image/upload/v${version}/${publicId}.${format}`;
-  console.log(url);
 
   return <Image src={url} alt={alt} />;
 }

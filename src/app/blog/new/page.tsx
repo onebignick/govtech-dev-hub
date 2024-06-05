@@ -20,9 +20,7 @@ export default function CreateNewProduct() {
         <Stack>
           <Title order={1}>Create New</Title>
           <BlogPostForm
-            submitForm={(values) => {
-              console.log(values);
-
+            submitForm={(values) =>
               createBlogPostMutation.mutate(
                 {
                   ...values,
@@ -32,8 +30,8 @@ export default function CreateNewProduct() {
                   onError: (error) => console.log(error),
                   onSuccess: () => router.push(navLinks.blog!.link),
                 },
-              );
-            }}
+              )
+            }
           />
         </Stack>
       }

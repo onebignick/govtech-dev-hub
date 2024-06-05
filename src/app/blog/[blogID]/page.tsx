@@ -12,12 +12,9 @@ export async function generateMetadata({
     .getMetadata({
       id: decodeURI(params.blogID),
     })
-    .then((blogPost) => {
-      console.log(blogPost);
-      return {
-        title: blogPost?.title,
-      };
-    });
+    .then((blogPost) => ({
+      title: blogPost?.title,
+    }));
 }
 
 export default async function BlogPost({

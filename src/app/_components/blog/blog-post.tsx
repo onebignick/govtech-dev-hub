@@ -24,6 +24,7 @@ export default function BlogPostDisplay({ blogPost }: { blogPost: BlogPost }) {
           />
           <DateBadge date={blogPost.createdAt} format={DateTime.DATE_MED} />
           <Title
+            mt="sm"
             order={1}
             c="white"
             lh={1}

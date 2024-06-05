@@ -35,7 +35,6 @@ export function OrganisationTree() {
     hasChildren,
     elementProps,
   }: RenderTreeNodePayload) {
-    console.log(elementProps);
     return (
       <Card
         key={node.value}
