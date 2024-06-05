@@ -10,8 +10,9 @@ datasource db {
 enum ProductType {
   PRODUCT
   AGENCY
-  PROTOTYPE
+  DEVTOOL
   INNERSOURCE
+  PROTOTYPE
 }
 
 model User {
@@ -63,25 +64,71 @@ model BlogPost {
   @@index([title])
 }
 
+model Runway {
+  id    String       @id
+  name  String
+  steps RunwayStep[]
+}
+
+model RunwayStep {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String
+  duration    String?
+  timeline    String?
+  runwayID    String
+  runway      Runway  @relation(fields: [runwayID], references: [id])
+}
+
 model Product {
-  id         String      @id
-  name       String
-  type       ProductType
-  oneLiner   String
-  summary    String
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  links      Link[]
-  changelogs Changelog[]
-  features   Feature[]
-  admins     User[]      @relation("ProductToUser")
-  logo       Image       @relation("ProductLogo", fields: [logoId], references: [id])
-  logoId     String      @unique
-  cover      Image?      @relation("ProductCover", fields: [coverId], references: [id])
-  coverId    String?     @unique
-  contacts   Contact[]   @relation("ProductContacts")
+  id            String                @id
+  name          String
+  type          ProductType
+  oneLiner      String
+  summary       String
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+  links         Link[]
+  changelogs    Changelog[]
+  features      Feature[]
+  admins        User[]                @relation("ProductToUser")
+  logo          Image                 @relation("ProductLogo", fields: [logoId], references: [id])
+  logoId        String                @unique
+  cover         Image?                @relation("ProductCover", fields: [coverId], references: [id])
+  coverId       String?               @unique
+  contacts      Contact[]             @relation("ProductContacts")
+  organisations Organisation[]        @relation("OrganisationProduct")
+  inCategory    ProductCategoryItem[]
 
   @@index([name])
+}
+
+model Organisation {
+  id       String         @id
+  name     String
+  parentID String?        @unique
+  parent   Organisation?  @relation("ParentOrganisation", fields: [parentID], references: [id])
+  children Organisation[] @relation("ParentOrganisation")
+  products Product[]      @relation("OrganisationProduct")
+}
+
+model ProductCategory {
+  id          String                @id
+  name        String
+  description String?
+  parentID    String?               @unique
+  parent      ProductCategory?      @relation("ParentProductCategory", fields: [parentID], references: [id])
+  children    ProductCategory[]     @relation("ParentProductCategory")
+  items       ProductCategoryItem[]
+}
+
+model ProductCategoryItem {
+  id         Int             @id @default(autoincrement())
+  label      String
+  productId  String
+  product    Product         @relation(fields: [productId], references: [id])
+  categoryId String
+  category   ProductCategory @relation(fields: [categoryId], references: [id])
 }
 
 model Link {
