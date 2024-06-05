@@ -30,6 +30,7 @@ export const navLinks: Record<string, Link> = {
     link: "/admin/products",
     inNavbar: false,
   },
+  guides: { title: "Guides", link: "/guides", inNavbar: true },
   products: { title: "Products", link: "/products", inNavbar: true },
   createProducts: {
     title: "Create Product",

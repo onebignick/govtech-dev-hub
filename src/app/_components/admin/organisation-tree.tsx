@@ -17,7 +17,6 @@ export function OrganisationTree() {
   }
 
   const organisations = organisationsRes.data;
-  console.log(organisations);
   const organisationsTree = organisations
     .filter((organisations) => !organisations.parentID)
     .map((organisation) => ({

@@ -29,8 +29,16 @@ export type CategoriesInput = z.infer<typeof inputCategories>;
 
 export type ProductCategory = Prisma.ProductCategoryGetPayload<{
   include: {
-    children: true;
-    items: true;
+    children: {
+      include: { items: { include: { product: { include: { logo: true } } } } };
+    };
+    items: { include: { product: { include: { logo: true } } } };
+  };
+}>;
+
+export type ProductCategoryItem = Prisma.ProductCategoryItemGetPayload<{
+  include: {
+    product: { include: { logo: true } };
   };
 }>;
 
@@ -38,8 +46,15 @@ export const categoryRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) =>
     ctx.db.productCategory.findMany({
       include: {
-        children: true,
-        items: true,
+        children: {
+          include: {
+            items: { include: { product: { include: { logo: true } } } },
+          },
+        },
+        items: { include: { product: { include: { logo: true } } } },
+      },
+      where: {
+        parentID: null,
       },
     }),
   ),

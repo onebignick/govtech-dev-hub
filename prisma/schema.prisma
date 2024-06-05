@@ -119,6 +119,7 @@ model Organisation {
 model ProductCategory {
   id          String                @id
   name        String
+  statement   String?
   description String?
   parentID    String?               @unique
   parent      ProductCategory?      @relation("ParentProductCategory", fields: [parentID], references: [id])
