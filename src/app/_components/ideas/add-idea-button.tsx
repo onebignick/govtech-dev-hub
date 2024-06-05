@@ -16,6 +16,7 @@ export default function AddIdeaButton() {
   const createProductMutation = api.idea.create.useMutation({
     onSuccess() {
       utils.idea.invalidate().catch((error) => console.log(error));
+      close();
     },
   });
 

@@ -8,11 +8,19 @@ import { CategoriesForm } from "~/app/_components/categories/categories-form";
 
 export default function GuideAdmin() {
   const utils = api.useUtils();
+  const categoriesRes = api.category.getAll.useQuery();
   const createCategoriesMutation = api.category.create.useMutation({
     onSuccess() {
       utils.category.invalidate().catch((error) => console.log(error));
     },
   });
+
+  if (!categoriesRes.data) {
+    return <div>Loading...</div>;
+  }
+
+  const categories = categoriesRes.data;
+
   return (
     <Shell
       backLink={navLinks.admin}
@@ -22,6 +30,7 @@ export default function GuideAdmin() {
             Categories Management
           </Title>
           <CategoriesForm
+            initialValues={categories}
             submitForm={(values) => {
               createCategoriesMutation.mutate(values, {
                 onError: (error) => console.log(error),

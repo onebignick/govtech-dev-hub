@@ -2,7 +2,10 @@
 
 import { Stack, Button, Group, TextInput, Textarea } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
-import { type CategoriesInput } from "~/server/api/routers/category";
+import {
+  ProductCategory,
+  type CategoriesInput,
+} from "~/server/api/routers/category";
 import { ProductCategoriesInput } from "./category-input";
 import { api } from "~/trpc/react";
 
@@ -10,12 +13,36 @@ export function CategoriesForm({
   initialValues = null,
   submitForm,
 }: {
-  initialValues?: CategoriesInput | null;
+  initialValues?: ProductCategory[] | null;
   submitForm: (object: CategoriesInput) => void;
 }) {
+  const processedValues: CategoriesInput | null = initialValues
+    ? {
+        categories: initialValues?.map((category) => ({
+          name: category.name,
+          description: category.description ?? undefined,
+          statement: category.statement ?? undefined,
+          items: category.items.map((item) => ({
+            label: item.label,
+            product: item.productId,
+          })),
+          children: category.children.map((child) => ({
+            name: child.name,
+            description: child.description ?? undefined,
+            statement: category.statement ?? undefined,
+            children: [],
+            items: category.items.map((item) => ({
+              label: item.label,
+              product: item.productId,
+            })),
+          })),
+        })),
+      }
+    : null;
+
   const form = useForm<CategoriesInput>({
     mode: "uncontrolled",
-    initialValues: initialValues ?? {
+    initialValues: processedValues ?? {
       categories: [],
     },
     validate: {},

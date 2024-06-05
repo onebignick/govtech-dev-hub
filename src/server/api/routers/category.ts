@@ -58,11 +58,19 @@ export const categoryRouter = createTRPCRouter({
       },
     }),
   ),
+  getForForm: publicProcedure.query(async ({ ctx }) =>
+    ctx.db.productCategory.findMany({
+      where: {
+        parentID: null,
+      },
+    }),
+  ),
   create: publicProcedure
     .input(inputCategories)
     .mutation(async ({ ctx, input }) => {
-      return Promise.all(
-        input.categories.map((category) =>
+      return ctx.db.$transaction([
+        ctx.db.productCategory.deleteMany(),
+        ...input.categories.map((category) =>
           ctx.db.productCategory.create({
             data: {
               id: category.name.toLowerCase().trim().replace(" ", "-"),
@@ -98,6 +106,6 @@ export const categoryRouter = createTRPCRouter({
             },
           }),
         ),
-      );
+      ]);
     }),
 });

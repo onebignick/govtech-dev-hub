@@ -27,6 +27,11 @@ export type Idea = Prisma.IdeaGetPayload<{
     creator: true;
     upvoted: true;
     downvoted: true;
+    _count: {
+      select: {
+        upvoted: true;
+      };
+    };
   };
 }>;
 
@@ -49,6 +54,11 @@ export const ideaRouter = createTRPCRouter({
         creator: true,
         upvoted: true,
         downvoted: true,
+        _count: {
+          select: {
+            upvoted: true,
+          },
+        },
       },
     }),
   ),

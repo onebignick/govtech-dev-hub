@@ -13,10 +13,18 @@ import {
   type ProductCategory,
   type ProductCategoryItem,
 } from "~/server/api/routers/category";
+import Link from "next/link";
+import { navLinks } from "../shell";
 
 function ProductListItem({ item }: { item: ProductCategoryItem }) {
   return (
-    <Card shadow="xs" className={cardClasses.card} my="sm">
+    <Card
+      component={Link}
+      href={`${navLinks.products?.link}/${item.productId}`}
+      shadow="xs"
+      className={cardClasses.card}
+      my="sm"
+    >
       <Group justify="space-between" px="xl">
         <Text size="h3" c="white" fw={500}>
           {item.label}

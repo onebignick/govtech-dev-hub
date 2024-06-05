@@ -1,9 +1,12 @@
 "use client";
 
 import Shell, { navLinks } from "@frontend/_components/shell";
-import { Stack, Title, Text, Image } from "@mantine/core";
+import { Stack, Title, Text, Image, Badge, Space } from "@mantine/core";
 import { MarkdownDisplay } from "~/app/_components/markdown";
 import { api } from "~/trpc/react";
+import classes from "~/styles/title.module.css";
+import { DateTime } from "luxon";
+import { UserDisplay } from "~/app/_components/userDisplay";
 
 export default function AdminEditProduct({
   params,
@@ -30,13 +33,27 @@ export default function AdminEditProduct({
             alt={`Cover for ${blogPost.title}`}
             my="lg"
           />
-          <Text
+
+          <Badge
+            variant="gradient"
+            gradient={{ from: "violet", to: "indigo", deg: 90 }}
+            mb="md"
+          >
+            {DateTime.fromJSDate(blogPost.createdAt).toLocaleString(
+              DateTime.DATE_MED,
+            )}
+          </Badge>
+          <Title
+            order={1}
             c="white"
-            fw={800}
-          >{`${blogPost.createdAt.toLocaleDateString()}`}</Text>
-          <Title order={1} c="white" lh={1} mb="lg">
+            lh={1}
+            mb="lg"
+            className={classes.titleUnderline}
+          >
             {blogPost.title}
           </Title>
+          <UserDisplay userID={blogPost.authorID} />
+          <Space h="md" />
           <MarkdownDisplay markdown={blogPost.content} />
         </Stack>
       }

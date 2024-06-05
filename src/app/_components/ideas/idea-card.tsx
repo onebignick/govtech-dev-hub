@@ -7,6 +7,7 @@ import {
   rem,
   Modal,
   Grid,
+  Badge,
 } from "@mantine/core";
 import cardClasses from "~/styles/card.module.css";
 import titleClasses from "~/styles/title.module.css";
@@ -16,6 +17,8 @@ import { type Idea } from "~/server/api/routers/idea";
 import { api } from "~/trpc/react";
 import { useDisclosure } from "@mantine/hooks";
 import { IdeaForm } from "./idea-form";
+import { DateTime } from "luxon";
+import { UserDisplay } from "../userDisplay";
 
 export function IdeaCard({ idea }: { idea: Idea }) {
   const [opened, { open, close }] = useDisclosure(false);
@@ -102,9 +105,17 @@ export function IdeaCard({ idea }: { idea: Idea }) {
                 </ActionIcon>
               )}
             </Group>
-            <Text c="white" size="lg">
-              {`by John Tan`}
-            </Text>
+            <Group>
+              <UserDisplay userID={idea.creatorID} />
+              <Badge
+                variant="gradient"
+                gradient={{ from: "violet", to: "indigo", deg: 90 }}
+              >
+                {DateTime.fromJSDate(idea.createdAt).toLocaleString(
+                  DateTime.DATE_MED,
+                )}
+              </Badge>
+            </Group>
             {idea.content.length > 0 && <Text c="white">{idea.content}</Text>}
           </Stack>
         </Grid.Col>

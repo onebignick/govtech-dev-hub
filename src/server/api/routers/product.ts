@@ -107,8 +107,8 @@ export const productRouter = createTRPCRouter({
             admins: {
               connectOrCreate: input.admins.map((admin) => {
                 return {
-                  create: { clerkUserId: admin },
-                  where: { clerkUserId: admin },
+                  create: { id: admin },
+                  where: { id: admin },
                 };
               }),
             },
