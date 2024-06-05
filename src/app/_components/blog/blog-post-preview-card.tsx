@@ -1,9 +1,9 @@
-import { Stack, Text, Card, Image, Badge, Group } from "@mantine/core";
+import { Stack, Text, Card, Image, Group } from "@mantine/core";
 import Link from "next/link";
 import { type BlogPost } from "~/server/api/routers/blogPost";
 import cardClasses from "~/styles/card.module.css";
 import { navLinks } from "../shell";
-import { UserDisplay } from "../userDisplay";
+import { UserDisplay } from "../user-display";
 import { DateTime } from "luxon";
 import { DateBadge } from "../date-badge";
 

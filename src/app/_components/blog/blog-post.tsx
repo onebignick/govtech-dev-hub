@@ -1,14 +1,12 @@
 "use client";
 
 import Shell, { navLinks } from "@frontend/_components/shell";
-import { Stack, Title, Text, Image, Badge, Space } from "@mantine/core";
+import { Stack, Title, Image, Space } from "@mantine/core";
 import { MarkdownDisplay } from "~/app/_components/markdown";
-import { api } from "~/trpc/react";
 import classes from "~/styles/title.module.css";
 import { DateTime } from "luxon";
-import { UserDisplay } from "~/app/_components/userDisplay";
-import { LoaderShell } from "~/app/_components/loader";
-import { BlogPost } from "~/server/api/routers/blogPost";
+import { UserDisplay } from "~/app/_components/user-display";
+import { type BlogPost } from "~/server/api/routers/blogPost";
 import { DateBadge } from "../date-badge";
 
 export default function BlogPostDisplay({ blogPost }: { blogPost: BlogPost }) {

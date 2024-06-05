@@ -1,10 +1,10 @@
-import { Stack, Text, Card, Group, Grid, Badge } from "@mantine/core";
+import { Stack, Text, Card, Group, Grid } from "@mantine/core";
 import cardClasses from "~/styles/card.module.css";
 import titleClasses from "~/styles/title.module.css";
 import { useAuth } from "@clerk/nextjs";
 import { type Idea } from "~/server/api/routers/idea";
 import { DateTime } from "luxon";
-import { UserDisplay } from "../userDisplay";
+import { UserDisplay } from "../user-display";
 import { EditIdeaButton } from "./edit-idea-button";
 import { IdeaVotesDisplay } from "./idea-votes-display";
 import { DateBadge } from "../date-badge";
