@@ -20,5 +20,5 @@ export type User = z.infer<typeof user>;
 export const userRouter = createTRPCRouter({
   getClerkUser: publicProcedure
     .input(inputUser)
-    .query(async ({ ctx, input }) => clerk.users.getUser(input)),
+    .query(async ({ input }) => clerk.users.getUser(input)),
 });

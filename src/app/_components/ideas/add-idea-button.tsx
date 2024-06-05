@@ -34,6 +34,7 @@ export default function AddIdeaButton() {
           Submit New Idea
         </Text>
         <IdeaForm
+          close={close}
           submitForm={(values) => {
             createProductMutation.mutate(
               {

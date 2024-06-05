@@ -2,7 +2,11 @@ import { type Prisma } from "@prisma/client";
 import { z } from "zod";
 import { cloudinaryUploader } from "~/app/utils/cloudinary";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 
 const inputProduct = z.object({
   id: z.string(),
@@ -71,7 +75,7 @@ export const productRouter = createTRPCRouter({
       },
     }),
   ),
-  create: publicProcedure
+  create: protectedProcedure
     .input(inputProduct)
     .mutation(async ({ ctx, input }) => {
       return Promise.all([
@@ -146,7 +150,7 @@ export const productRouter = createTRPCRouter({
       where: { id: input.id },
     }),
   ),
-  delete: publicProcedure
+  delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const deleteFeatures = ctx.db.feature.deleteMany({
