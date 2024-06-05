@@ -1,5 +1,5 @@
-import { useAuth } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import EditProduct from "~/app/_components/products/edit-product-form";
 import { navLinks } from "~/app/_components/shell";
 import { api } from "~/trpc/server";
@@ -23,8 +23,7 @@ export default async function AdminEditProduct({
 }: {
   params: { productID: string };
 }) {
-  const auth = useAuth();
-  const router = useRouter();
+  const clerkAuth = auth();
 
   return api.product
     .get({
@@ -32,11 +31,10 @@ export default async function AdminEditProduct({
     })
     .then((product) => {
       if (
-        product?.admins.findIndex((admin) => admin.id === auth.userId) === -1
+        product?.admins.findIndex((admin) => admin.id === clerkAuth.userId) ===
+        -1
       ) {
-        router.push(navLinks.products!.link);
-
-        return null;
+        redirect(navLinks.products!.link);
       }
 
       return product ? <EditProduct product={product} /> : null;
