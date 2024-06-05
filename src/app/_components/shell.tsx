@@ -1,6 +1,14 @@
 "use client";
 
-import { AppShell, Box, Burger, Button, Group } from "@mantine/core";
+import {
+  AppShell,
+  Box,
+  Burger,
+  Button,
+  Drawer,
+  Group,
+  Stack,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import NextImage from "next/image";
 import { Image } from "@mantine/core";
@@ -57,7 +65,6 @@ export default function Shell({ page, backLink }: ShellProps) {
   return (
     <AppShell padding="md">
       <AppShell.Main className={classes.wrapper}>
-        <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
         <Group
           className={classes.navlinks}
           align="center"
@@ -76,7 +83,33 @@ export default function Shell({ page, backLink }: ShellProps) {
               pl="md"
             />
           </Link>
-          <Group>
+          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+
+          <Drawer opened={opened} onClose={toggle} position="right">
+            <SignedOut>
+              <SignInButton />
+            </SignedOut>
+            <SignedIn>
+              <Stack>
+                {Array.from(Object.values(navLinks))
+                  .filter((link) => link.inNavbar)
+                  .map((link) => (
+                    <Link href={link.link} key={link.title}>
+                      <Button
+                        classNames={{ root: classes.navlinks }}
+                        variant="transparent"
+                      >
+                        {link.title}
+                      </Button>
+                    </Link>
+                  ))}
+                <Box ml="md">
+                  <UserButton />
+                </Box>
+              </Stack>
+            </SignedIn>
+          </Drawer>
+          <Group visibleFrom="sm">
             <SignedOut>
               <SignInButton />
             </SignedOut>
@@ -97,7 +130,7 @@ export default function Shell({ page, backLink }: ShellProps) {
             </SignedIn>
           </Group>
         </Group>
-        <Box mx="auto" mt="xl" w="70vw">
+        <Box mx="auto" mt="xl" w={{ base: undefined, sm: "70vw" }}>
           {backLink && (
             <Button
               leftSection={<IconChevronLeft />}

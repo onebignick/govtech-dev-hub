@@ -39,5 +39,5 @@ export function ProductCardsGrid({ products }: { products: ProductSummary[] }) {
     </Card>
   ));
 
-  return <SimpleGrid cols={3}>{cards}</SimpleGrid>;
+  return <SimpleGrid cols={{ base: 2, sm: 3 }}>{cards}</SimpleGrid>;
 }

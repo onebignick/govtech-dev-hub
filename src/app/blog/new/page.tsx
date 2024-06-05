@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { BlogPostForm } from "~/app/_components/blog/blog-post-form";
 import { api } from "~/trpc/react";
 
-export default function CreateNewProduct() {
+export default function CreateBlogPost() {
   const router = useRouter();
   const createBlogPostMutation = api.blogPost.create.useMutation();
 

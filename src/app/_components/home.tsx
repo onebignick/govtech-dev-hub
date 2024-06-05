@@ -10,7 +10,7 @@ export default function HomePage() {
   const auth = useAuth();
 
   return (
-    <Center h="80vh">
+    <Center h={{ base: undefined, sm: "80vh" }}>
       <Container size={700} className={classes.inner}>
         <h1 className={classes.title}>
           A{" "}

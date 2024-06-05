@@ -15,19 +15,19 @@ const theme = createTheme({
     sizes: {
       h1: {
         fontWeight: "800",
-        fontSize: "3em",
+        fontSize: "2.5rem",
       },
       h2: {
         fontWeight: "800",
-        fontSize: "2.5em",
+        fontSize: "2rem",
       },
       h3: {
         fontWeight: "800",
-        fontSize: "2em",
+        fontSize: "1.5rem",
       },
       h4: {
         fontWeight: "800",
-        fontSize: "1.5em",
+        fontSize: "1rem",
       },
     },
   },

@@ -1,13 +1,22 @@
+"use client";
+
 import classes from "~/styles/title.module.css";
 import Shell from "@frontend/_components/shell";
 import { Group, Stack, Title } from "@mantine/core";
 import { IdeasList } from "../_components/ideas/ideas-list";
 import AddIdeaButton from "../_components/ideas/add-idea-button";
-import { api } from "~/trpc/server";
-import { Suspense } from "react";
-import { LoaderDisplay } from "../_components/loader";
+import { api } from "~/trpc/react";
+import { LoaderShell } from "../_components/loader";
 
 export default function Ideas() {
+  const ideasRes = api.idea.getAll.useQuery();
+
+  if (!ideasRes.data) {
+    return <LoaderShell />;
+  }
+
+  const ideas = ideasRes.data;
+
   return (
     <Shell
       page={
@@ -18,9 +27,7 @@ export default function Ideas() {
             </Title>
             <AddIdeaButton />
           </Group>
-          {api.idea.getAll().then((ideas) => (
-            <IdeasList ideas={ideas} />
-          ))}
+          <IdeasList ideas={ideas} />
         </Stack>
       }
     />

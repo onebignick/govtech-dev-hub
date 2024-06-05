@@ -111,7 +111,7 @@ export function ProductPage({ product }: { product: Product }) {
           <Title order={2} c="white">
             Key Features
           </Title>
-          <SimpleGrid w="100%" cols={3}>
+          <SimpleGrid w="100%" cols={{ base: 1, sm: 3 }}>
             {product.features?.map((feature) => (
               <FeatureDisplay key={feature.title} feature={feature} />
             ))}

@@ -1,4 +1,4 @@
-import { Stack, Text, Card, Group, Grid } from "@mantine/core";
+import { Stack, Text, Card, Group, Grid, Flex } from "@mantine/core";
 import cardClasses from "~/styles/card.module.css";
 import titleClasses from "~/styles/title.module.css";
 import { useAuth } from "@clerk/nextjs";
@@ -15,24 +15,33 @@ export function IdeaCard({ idea }: { idea: Idea }) {
   return (
     <Card key={idea.id} className={cardClasses.staticCard} shadow="xs">
       <Grid>
-        <Grid.Col span="content">
+        <Grid.Col span={{ base: 12, sm: "content" }}>
           <IdeaVotesDisplay idea={idea} />
         </Grid.Col>
         <Grid.Col span="auto">
           <Stack gap={0}>
-            <Group>
-              <Text className={titleClasses.hoverWhiteText} size="xl" fw={900}>
+            <Flex align="center">
+              <Text
+                className={titleClasses.hoverWhiteText}
+                lh={1}
+                size="xl"
+                fw={900}
+              >
                 {idea.title}
               </Text>
               {auth.userId === idea.creator.id && (
                 <EditIdeaButton idea={idea} />
               )}
-            </Group>
+            </Flex>
             <Group>
               <UserDisplay userID={idea.creatorID} />
               <DateBadge date={idea.createdAt} format={DateTime.DATE_MED} />
             </Group>
-            {idea.content.length > 0 && <Text c="white">{idea.content}</Text>}
+            {idea.content.length > 0 && (
+              <Text c="white" mt="md">
+                {idea.content}
+              </Text>
+            )}
           </Stack>
         </Grid.Col>
       </Grid>
