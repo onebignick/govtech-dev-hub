@@ -46,7 +46,7 @@ export function ProductFeaturesInput({
     <Input.Wrapper
       label="Key Features"
       description="List down your key features"
-      key={`features`}
+      key={form.key("features")}
       {...form.getInputProps(`features`)}
     >
       {form.getValues().features.map((item, index) => (
