@@ -16,10 +16,13 @@ import cardClasses from "~/styles/card.module.css";
 import titleClasses from "~/styles/title.module.css";
 import { type Changelog, type Feature } from "@prisma/client";
 import Link from "next/link";
-import { IconLink } from "@tabler/icons-react";
+import { IconLink, IconPencil } from "@tabler/icons-react";
 import { ProductContactCard } from "./product-contact-card";
+import { navLinks } from "../shell";
+import { useAuth } from "@clerk/nextjs";
 
 export function ProductPage({ product }: { product: Product }) {
+  const auth = useAuth();
   const FeatureDisplay = ({ feature }: { feature: Feature }) => (
     <Card
       key={feature.title}
@@ -75,6 +78,18 @@ export function ProductPage({ product }: { product: Product }) {
             {product.name}
           </Title>
         </Stack>
+        {product.admins.findIndex((admin) => admin.id === auth.userId) !==
+          -1 && (
+          <Button
+            variant="gradient"
+            gradient={{ from: "indigo", to: "violet", deg: 90 }}
+            component={Link}
+            href={`${navLinks.products!.link}/${product.id}/edit`}
+            leftSection={<IconPencil />}
+          >
+            Edit
+          </Button>
+        )}
       </Group>
       <Text size="lg" fw="500">
         {product.summary}

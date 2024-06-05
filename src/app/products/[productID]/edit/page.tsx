@@ -1,6 +1,7 @@
-import { Suspense } from "react";
-import { LoaderShell } from "~/app/_components/loader";
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import EditProduct from "~/app/_components/products/edit-product-form";
+import { navLinks } from "~/app/_components/shell";
 import { api } from "~/trpc/server";
 
 export async function generateMetadata({
@@ -17,20 +18,27 @@ export async function generateMetadata({
     }));
 }
 
-export default function AdminEditProduct({
+export default async function AdminEditProduct({
   params,
 }: {
   params: { productID: string };
 }) {
-  return (
-    <Suspense fallback={<LoaderShell />}>
-      {api.product
-        .get({
-          id: params.productID,
-        })
-        .then((product) =>
-          product ? <EditProduct product={product} /> : null,
-        )}
-    </Suspense>
-  );
+  const auth = useAuth();
+  const router = useRouter();
+
+  return api.product
+    .get({
+      id: params.productID,
+    })
+    .then((product) => {
+      if (
+        product?.admins.findIndex((admin) => admin.id === auth.userId) === -1
+      ) {
+        router.push(navLinks.products!.link);
+
+        return null;
+      }
+
+      return product ? <EditProduct product={product} /> : null;
+    });
 }

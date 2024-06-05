@@ -48,6 +48,7 @@ export type Product = Prisma.ProductGetPayload<{
     changelogs: true;
     logo: true;
     cover: true;
+    admins: true;
   };
 }>;
 
@@ -71,6 +72,7 @@ export const productRouter = createTRPCRouter({
           changelogs: true,
           logo: true,
           cover: true,
+          admins: true,
         },
       }),
     ),
