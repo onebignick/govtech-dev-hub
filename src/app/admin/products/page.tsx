@@ -1,19 +1,16 @@
-"use client";
-
-import { Stack, Title } from "@mantine/core";
-import Shell, { navLinks } from "@frontend/_components/shell";
 import { ProductsTable } from "~/app/_components/admin/product-table";
+import { Suspense } from "react";
+import { api } from "~/trpc/server";
+import { LoaderShell } from "~/app/_components/loader";
 
-export default function Admin() {
+export default async function Admin() {
   return (
-    <Shell
-      backLink={navLinks.admin}
-      page={
-        <Stack>
-          <Title order={1}>Product Management</Title>
-          <ProductsTable />
-        </Stack>
-      }
-    />
+    <Suspense fallback={<LoaderShell />}>
+      {api.product
+        .getAll()
+        .then((products) =>
+          products ? <ProductsTable products={products} /> : null,
+        )}
+    </Suspense>
   );
 }

@@ -66,6 +66,7 @@ export const categoryRouter = createTRPCRouter({
     .input(inputCategories)
     .mutation(async ({ ctx, input }) => {
       return ctx.db.$transaction([
+        ctx.db.productCategoryItem.deleteMany(),
         ctx.db.productCategory.deleteMany(),
         ...input.categories.map((category) =>
           ctx.db.productCategory.create({

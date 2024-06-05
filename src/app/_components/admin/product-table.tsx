@@ -1,12 +1,23 @@
-import { Avatar, Table, Group, Text, ActionIcon, rem } from "@mantine/core";
+"use client";
+
+import {
+  Avatar,
+  Table,
+  Group,
+  Text,
+  ActionIcon,
+  rem,
+  Stack,
+  Title,
+} from "@mantine/core";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import Link from "next/link";
 import { api } from "~/trpc/react";
-import { LoaderDisplay } from "../loader";
+import { type Product } from "@prisma/client";
+import Shell, { navLinks } from "../shell";
 
-export function ProductsTable() {
+export function ProductsTable({ products }: { products: Product[] }) {
   const utils = api.useUtils();
-  const products = api.product.getAll.useQuery();
   const deleteUserMutation = api.product.delete.useMutation({
     onSuccess() {
       utils.product.invalidate().catch((error) => console.log(error));
@@ -15,14 +26,10 @@ export function ProductsTable() {
 
   const deleteProduct = (id: string) => {
     deleteUserMutation.mutate({ id });
-    products.refetch().catch((error) => console.log(error));
+    utils.product.invalidate().catch((error) => console.log(error));
   };
 
-  if (!products.data) {
-    return <LoaderDisplay />;
-  }
-
-  const rows = products.data.map((product) => (
+  const rows = products.map((product) => (
     <Table.Tr key={product.id}>
       <Table.Td>
         <Group gap="sm">
@@ -72,19 +79,27 @@ export function ProductsTable() {
   ));
 
   return (
-    <Table.ScrollContainer minWidth={800}>
-      <Table verticalSpacing="sm">
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th>Product</Table.Th>
-            <Table.Th>Type</Table.Th>
-            <Table.Th>Email</Table.Th>
-            <Table.Th>Role</Table.Th>
-            <Table.Th />
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>{rows}</Table.Tbody>
-      </Table>
-    </Table.ScrollContainer>
+    <Shell
+      backLink={navLinks.admin}
+      page={
+        <Stack>
+          <Title order={1}>Product Management</Title>
+          <Table.ScrollContainer minWidth={800}>
+            <Table verticalSpacing="sm">
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Product</Table.Th>
+                  <Table.Th>Type</Table.Th>
+                  <Table.Th>Email</Table.Th>
+                  <Table.Th>Role</Table.Th>
+                  <Table.Th />
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>{rows}</Table.Tbody>
+            </Table>
+          </Table.ScrollContainer>
+        </Stack>
+      }
+    />
   );
 }

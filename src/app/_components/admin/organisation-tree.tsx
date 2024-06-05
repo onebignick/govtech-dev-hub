@@ -4,20 +4,21 @@ import {
   Tree,
   Card,
   Text,
+  Stack,
+  Title,
 } from "@mantine/core";
-import { api } from "~/trpc/react";
+import titleClasses from "~/styles/title.module.css";
 import cardClasses from "~/styles/card.module.css";
 import { IconChevronDown } from "@tabler/icons-react";
-import { LoaderDisplay } from "../loader";
+import { type Organisation } from "~/server/api/routers/organisation";
+import AddOrganisationButton from "../organisations/add-organisation-button";
+import Shell, { navLinks } from "../shell";
 
-export function OrganisationTree() {
-  const organisationsRes = api.organisation.getAll.useQuery();
-
-  if (!organisationsRes.data) {
-    return <LoaderDisplay />;
-  }
-
-  const organisations = organisationsRes.data;
+export function OrganisationTree({
+  organisations,
+}: {
+  organisations: Organisation[];
+}) {
   const organisationsTree = organisations
     .filter((organisations) => !organisations.parentID)
     .map((organisation) => ({
@@ -68,10 +69,23 @@ export function OrganisationTree() {
   }
 
   return (
-    <Tree
-      clearSelectionOnOutsideClick
-      data={organisationsTree}
-      renderNode={(payload) => <Leaf {...payload} />}
+    <Shell
+      backLink={navLinks.admin}
+      page={
+        <Stack>
+          <Group justify="space-between">
+            <Title order={1} c="white" className={titleClasses.titleUnderline}>
+              Organisation Management
+            </Title>
+            <AddOrganisationButton />
+          </Group>
+          <Tree
+            clearSelectionOnOutsideClick
+            data={organisationsTree}
+            renderNode={(payload) => <Leaf {...payload} />}
+          />
+        </Stack>
+      }
     />
   );
 }
