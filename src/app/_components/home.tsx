@@ -2,8 +2,13 @@
 
 import classes from "~/styles/home.module.css";
 import { Container, Text, Group, Button, Center } from "@mantine/core";
+import { useAuth } from "@clerk/nextjs";
+import Link from "next/link";
+import { navLinks } from "./shell";
 
 export default function HomePage() {
+  const auth = useAuth();
+
   return (
     <Center h="80vh">
       <Container size={700} className={classes.inner}>
@@ -36,14 +41,27 @@ export default function HomePage() {
         </Text>
 
         <Group className={classes.controls}>
-          <Button
-            size="xl"
-            className={classes.control}
-            variant="gradient"
-            gradient={{ from: "red", to: "yellow" }}
-          >
-            Login via TechPass
-          </Button>
+          {auth.userId ? (
+            <Button
+              size="xl"
+              className={classes.control}
+              variant="gradient"
+              gradient={{ from: "red", to: "yellow" }}
+              component={Link}
+              href={navLinks.guides!.link}
+            >
+              Discover
+            </Button>
+          ) : (
+            <Button
+              size="xl"
+              className={classes.control}
+              variant="gradient"
+              gradient={{ from: "red", to: "yellow" }}
+            >
+              Login via TechPass
+            </Button>
+          )}
         </Group>
       </Container>
     </Center>

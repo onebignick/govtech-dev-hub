@@ -1,7 +1,7 @@
 import { type ReactNode } from "react";
 
 export const metadata = {
-  title: "Edit Product",
+  title: "Product Catalog",
 };
 
 export default function ClientLayout({ children }: { children: ReactNode }) {

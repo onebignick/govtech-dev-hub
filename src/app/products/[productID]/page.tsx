@@ -1,29 +1,37 @@
-"use client";
+import { Suspense } from "react";
+import { LoaderShell } from "~/app/_components/loader";
+import ProductComponent from "~/app/_components/products/product";
+import { api } from "~/trpc/server";
 
-import Shell, { navLinks } from "@frontend/_components/shell";
-import { Stack } from "@mantine/core";
-import { ProductPage } from "~/app/_components/products/product-page";
-import { api } from "~/trpc/react";
-
-export default function AdminEditProduct({
+export async function generateMetadata({
   params,
 }: {
   params: { productID: string };
 }) {
-  const productRes = api.product.get.useQuery({
-    id: params.productID,
-  });
+  return api.product
+    .get({
+      id: decodeURI(params.productID),
+    })
+    .then((product) => ({
+      title: product?.name,
+      description: product?.oneLiner,
+    }));
+}
 
-  if (!productRes.data) {
-    return <div>Loading...</div>;
-  }
-
-  const product = productRes.data;
-
+export default async function ProductServerPage({
+  params,
+}: {
+  params: { productID: string };
+}) {
   return (
-    <Shell
-      backLink={navLinks.products}
-      page={<Stack>{product && <ProductPage product={product} />}</Stack>}
-    />
+    <Suspense fallback={<LoaderShell />}>
+      {api.product
+        .get({
+          id: decodeURI(params.productID),
+        })
+        .then((product) =>
+          product ? <ProductComponent product={product} /> : null,
+        )}
+    </Suspense>
   );
 }

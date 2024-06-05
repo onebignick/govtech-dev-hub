@@ -4,16 +4,10 @@ import { navLinks } from "../shell";
 import classes from "~/styles/cursor.module.css";
 import cardClasses from "~/styles/card.module.css";
 import titleClasses from "~/styles/title.module.css";
-import { api } from "~/trpc/react";
+import { type ProductSummary } from "~/server/api/routers/product";
 
-export function ProductCardsGrid() {
-  const products = api.product.getAll.useQuery();
-
-  if (!products.data) {
-    return <div>Loading...</div>;
-  }
-
-  const cards = products.data.map((product) => (
+export function ProductCardsGrid({ products }: { products: ProductSummary[] }) {
+  const cards = products.map((product) => (
     <Card
       component={Link}
       href={`${navLinks.products?.link}/${product.id}`}

@@ -10,8 +10,9 @@ datasource db {
 enum ProductType {
   PRODUCT
   AGENCY
-  PROTOTYPE
+  DEVTOOL
   INNERSOURCE
+  PROTOTYPE
 }
 
 model User {
@@ -25,28 +26,26 @@ model User {
   upvotedIdeas   Idea[]        @relation("UpvotedIdea")
   downvotedIdeas Idea[]        @relation("DownvotedIdea")
   ideaComments   IdeaComment[]
-  contact        Contact[]
 }
 
 model Contact {
   id       Int       @id @default(autoincrement())
   name     String
   email    String
-  user     User?     @relation(fields: [userID], references: [id])
-  userID   String
   products Product[] @relation("ProductContacts")
 }
 
 model Image {
-  id        String    @id @default(cuid())
-  publicId  String    @unique
+  id        String        @id @default(cuid())
+  publicId  String        @unique
   format    String
   version   String
   url       String
   secureUrl String
-  logoFor   Product?  @relation("ProductLogo")
-  coverFor  Product?  @relation("ProductCover")
-  blogPost  BlogPost? @relation("BlogCover")
+  logoFor   Product?      @relation("ProductLogo")
+  coverFor  Product?      @relation("ProductCover")
+  blogPost  BlogPost?     @relation("BlogCover")
+  orgLogo   Organisation? @relation("OrgLogo")
 }
 
 model BlogPost {
@@ -63,25 +62,76 @@ model BlogPost {
   @@index([title])
 }
 
+model Runway {
+  id    String       @id
+  name  String
+  steps RunwayStep[]
+}
+
+model RunwayStep {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String
+  duration    String?
+  timeline    String?
+  runwayID    String
+  runway      Runway  @relation(fields: [runwayID], references: [id])
+}
+
 model Product {
-  id         String      @id
-  name       String
-  type       ProductType
-  oneLiner   String
-  summary    String
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  links      Link[]
-  changelogs Changelog[]
-  features   Feature[]
-  admins     User[]      @relation("ProductToUser")
-  logo       Image       @relation("ProductLogo", fields: [logoId], references: [id])
-  logoId     String      @unique
-  cover      Image?      @relation("ProductCover", fields: [coverId], references: [id])
-  coverId    String?     @unique
-  contacts   Contact[]   @relation("ProductContacts")
+  id             String                @id
+  name           String
+  type           ProductType
+  oneLiner       String
+  summary        String
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+  links          Link[]
+  changelogs     Changelog[]
+  features       Feature[]
+  admins         User[]                @relation("ProductToUser")
+  logo           Image                 @relation("ProductLogo", fields: [logoId], references: [id])
+  logoId         String                @unique
+  cover          Image?                @relation("ProductCover", fields: [coverId], references: [id])
+  coverId        String?               @unique
+  contacts       Contact[]             @relation("ProductContacts")
+  organisation   Organisation?         @relation("OrganisationProduct", fields: [organisationId], references: [id])
+  organisationId String?
+  inCategory     ProductCategoryItem[]
 
   @@index([name])
+}
+
+model Organisation {
+  id       String         @id
+  name     String
+  acronym  String
+  parentID String?        @unique
+  parent   Organisation?  @relation("ParentOrganisation", fields: [parentID], references: [id])
+  children Organisation[] @relation("ParentOrganisation")
+  products Product[]      @relation("OrganisationProduct")
+  logo     Image?         @relation("OrgLogo", fields: [logoId], references: [id])
+  logoId   String?        @unique
+}
+
+model ProductCategory {
+  id          String                @id
+  name        String
+  statement   String?
+  description String?
+  parentID    String?               @unique
+  parent      ProductCategory?      @relation("ParentProductCategory", fields: [parentID], references: [id])
+  children    ProductCategory[]     @relation("ParentProductCategory")
+  items       ProductCategoryItem[]
+}
+
+model ProductCategoryItem {
+  id         Int             @id @default(autoincrement())
+  label      String
+  productId  String
+  product    Product         @relation(fields: [productId], references: [id])
+  categoryId String
+  category   ProductCategory @relation(fields: [categoryId], references: [id])
 }
 
 model Link {

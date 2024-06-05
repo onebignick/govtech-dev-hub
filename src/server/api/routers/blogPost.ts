@@ -2,7 +2,11 @@ import { type Prisma } from "@prisma/client";
 import { z } from "zod";
 import { cloudinaryUploader } from "~/app/utils/cloudinary";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 
 const inputBlogPost = z.object({
   title: z.string().min(1),
@@ -32,6 +36,13 @@ export const blogPostRouter = createTRPCRouter({
         },
       }),
     ),
+  getMetadata: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) =>
+      ctx.db.blogPost.findFirst({
+        where: { id: input.id },
+      }),
+    ),
   getAll: publicProcedure.query(async ({ ctx }) =>
     ctx.db.blogPost.findMany({
       include: {
@@ -40,7 +51,7 @@ export const blogPostRouter = createTRPCRouter({
       },
     }),
   ),
-  create: publicProcedure
+  create: protectedProcedure
     .input(inputBlogPost)
     .mutation(async ({ ctx, input }) => {
       const id = input.title.toLowerCase().trim().replace(" ", "-");

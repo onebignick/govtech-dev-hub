@@ -9,12 +9,15 @@ import {
   SimpleGrid,
   Timeline,
   Button,
+  Flex,
 } from "@mantine/core";
 import { type Product } from "~/server/api/routers/product";
 import cardClasses from "~/styles/card.module.css";
 import titleClasses from "~/styles/title.module.css";
 import { type Changelog, type Feature } from "@prisma/client";
 import Link from "next/link";
+import { IconLink } from "@tabler/icons-react";
+import { ProductContactCard } from "./product-contact-card";
 
 export function ProductPage({ product }: { product: Product }) {
   const FeatureDisplay = ({ feature }: { feature: Feature }) => (
@@ -57,7 +60,7 @@ export function ProductPage({ product }: { product: Product }) {
   );
 
   return (
-    <Stack align="flex-start">
+    <Stack>
       <Group>
         <Image
           w="10vw"
@@ -66,7 +69,7 @@ export function ProductPage({ product }: { product: Product }) {
           src={product.logo.url}
           alt={`${product.name} Logo`}
         />
-        <Stack gap={0}>
+        <Stack gap={0} align="flex-start">
           <Text>{product.oneLiner}</Text>
           <Title c="white" order={1} className={titleClasses.titleUnderline}>
             {product.name}
@@ -80,42 +83,61 @@ export function ProductPage({ product }: { product: Product }) {
         <Group>
           {product.links.map((link, index) => (
             <Button
-              variant="light"
+              variant="gradient"
+              gradient={{ from: "indigo", to: "violet", deg: 90 }}
               key={`${link.label}.${index}`}
               component={Link}
               href={link.url}
+              leftSection={<IconLink />}
             >
               {link.label}
             </Button>
           ))}
         </Group>
       )}
-      <Image src={product.cover?.url} alt={`${product.name} Cover`} />
+      {product.contacts.length > 0 && (
+        <Flex>
+          {product.contacts?.map((contact) => (
+            <ProductContactCard key={contact.id} contact={contact} />
+          ))}
+        </Flex>
+      )}
+      {product.cover && (
+        <Image src={product.cover?.url} alt={`${product.name} Cover`} />
+      )}
       <Space h="md" />
-      <Title order={2} c="white">
-        Key Features
-      </Title>
-      <SimpleGrid w="100%" cols={3}>
-        {product.features?.map((feature) => (
-          <FeatureDisplay key={feature.title} feature={feature} />
-        ))}
-      </SimpleGrid>
-      <Title order={2} c="white">
-        Highlights
-      </Title>
-      <Timeline
-        color="violet"
-        active={product.changelogs.length + 1}
-        bulletSize={25}
-        mb="xl"
-      >
-        {product.changelogs.map((changelog) => (
-          <Timeline.Item key={changelog.quarter}>
-            <ChangelogDisplay changelog={changelog} />
-          </Timeline.Item>
-        ))}
-        <Timeline.Item></Timeline.Item>
-      </Timeline>
+      {product.features.length > 0 && (
+        <>
+          <Title order={2} c="white">
+            Key Features
+          </Title>
+          <SimpleGrid w="100%" cols={3}>
+            {product.features?.map((feature) => (
+              <FeatureDisplay key={feature.title} feature={feature} />
+            ))}
+          </SimpleGrid>
+        </>
+      )}
+      {product.changelogs.length > 0 && (
+        <>
+          <Title order={2} c="white">
+            Highlights
+          </Title>
+          <Timeline
+            color="violet"
+            active={product.changelogs.length + 1}
+            bulletSize={25}
+            mb="xl"
+          >
+            {product.changelogs.map((changelog) => (
+              <Timeline.Item key={changelog.quarter}>
+                <ChangelogDisplay changelog={changelog} />
+              </Timeline.Item>
+            ))}
+            <Timeline.Item></Timeline.Item>
+          </Timeline>
+        </>
+      )}
     </Stack>
   );
 }

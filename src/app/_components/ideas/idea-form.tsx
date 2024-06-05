@@ -1,16 +1,23 @@
 "use client";
 
-import { Stack, Button, Group, TextInput, Textarea } from "@mantine/core";
+import { Stack, Button, Group, TextInput, Textarea, Text } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
+import { useState } from "react";
 import { type IdeaInput } from "~/server/api/routers/idea";
 
 export function IdeaForm({
   initialValues = null,
+  handleDelete = null,
+  close,
   submitForm,
 }: {
   initialValues?: IdeaInput | null;
+  handleDelete?: (() => void) | null;
   submitForm: (object: IdeaInput) => void;
+  close: () => void;
 }) {
+  const [clickedDelete, setClicks] = useState<number>(0);
+
   const form = useForm({
     mode: "uncontrolled",
     initialValues: initialValues ?? {
@@ -43,6 +50,28 @@ export function IdeaForm({
           {...form.getInputProps("content")}
         />
         <Group justify="flex-end" mt="md">
+          {clickedDelete > 0 && (
+            <Text c="white">
+              Are you sure you want to delete? This is irreversible. Click
+              Delete again to confirm.
+            </Text>
+          )}
+          {handleDelete && (
+            <Button
+              onClick={
+                clickedDelete > 0
+                  ? handleDelete
+                  : () => setClicks(clickedDelete + 1)
+              }
+              variant="filled"
+              color="red"
+            >
+              Delete
+            </Button>
+          )}
+          <Button onClick={close} variant="filled" color="gray">
+            Cancel
+          </Button>
           <Button
             type="submit"
             variant="gradient"

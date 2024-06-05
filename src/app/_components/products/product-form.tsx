@@ -13,6 +13,8 @@ import { ProductChangelogsInput } from "./product-changelogs-input";
 import { UploadInput } from "../upload-input";
 import { ProductLinksInput } from "./product-links-input";
 import { ProductContactsInput } from "./product-contacts-input";
+import { OrganiationParentInput } from "../organisations/organisation-parent-input";
+import { ProductOrganisationInput } from "./product-organisation-input";
 
 export function ProductForm({
   initialValues,
@@ -40,6 +42,10 @@ export function ProductForm({
     validate: {
       id: isNotEmpty("Name is required"),
       name: isNotEmpty("Name is required"),
+      type: (value, values) =>
+        (values.type === "AGENCY" || "PRODUCT") && value.length > 0
+          ? "Choose an organisation"
+          : null,
     },
   });
 
@@ -50,25 +56,30 @@ export function ProductForm({
       })}
     >
       <Stack>
-        <NativeSelect
-          withAsterisk
-          key={form.key("type")}
-          label="Type"
-          description="Is it a full GovTech product? A one-time project for an agency? Or a cool Innersource package?"
-          data={[
-            { label: "GovTech Product", value: "PRODUCT" },
-            { label: "Agency Project", value: "PROJECT" },
-            { label: "Prototype", value: "PROTOTYPE" },
-            { label: "Innersource Project", value: "INNERSOURCE" },
-          ]}
-          {...form.getInputProps("type")}
-        />
+        <Group grow align="flex-start">
+          <NativeSelect
+            withAsterisk
+            key={form.key("type")}
+            label="Type"
+            description="Is it a full GovTech product? A one-time project for an agency? Or a cool Innersource package?"
+            data={[
+              { label: "GovTech Product", value: "PRODUCT" },
+              { label: "Agency Project", value: "AGENCY" },
+              { label: "Development Tool", value: "DEVTOOL" },
+              { label: "Innersource Project", value: "INNERSOURCE" },
+              { label: "Prototype", value: "PROTOTYPE" },
+            ]}
+            {...form.getInputProps("type")}
+          />
+          <ProductOrganisationInput form={form} />
+        </Group>
         <TextInput
           withAsterisk
           label="ID"
           placeholder="e.g. ship-hats"
           description="Only accepts lowercase letters and numbers. No spaces or uppercase."
           key={form.key("id")}
+          disabled={initialValues !== null && initialValues !== undefined}
           {...form.getInputProps("id")}
         />
         <TextInput
@@ -88,6 +99,7 @@ export function ProductForm({
         />
         <Group align="flex-start" grow>
           <UploadInput
+            withAsterisk
             label="Logo"
             description="Upload a square icon"
             key={form.key("logo")}

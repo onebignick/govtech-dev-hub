@@ -146,7 +146,7 @@ export function ProductChangelogsInput({
             })
           }
         >
-          Add Quarter
+          Add Changelog
         </Button>
       </Group>
     </Input.Wrapper>

@@ -1,7 +1,11 @@
 import { type Prisma } from "@prisma/client";
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 
 const voteIdea = z.object({
   id: z.number(),
@@ -27,6 +31,11 @@ export type Idea = Prisma.IdeaGetPayload<{
     creator: true;
     upvoted: true;
     downvoted: true;
+    _count: {
+      select: {
+        upvoted: true;
+      };
+    };
   };
 }>;
 
@@ -49,24 +58,31 @@ export const ideaRouter = createTRPCRouter({
         creator: true,
         upvoted: true,
         downvoted: true,
-      },
-    }),
-  ),
-  create: publicProcedure.input(inputIdea).mutation(async ({ ctx, input }) => {
-    return ctx.db.idea.create({
-      data: {
-        title: input.title,
-        content: input.content,
-        creator: {
-          connectOrCreate: {
-            create: { id: input.creator },
-            where: { id: input.creator },
+        _count: {
+          select: {
+            upvoted: true,
           },
         },
       },
-    });
-  }),
-  edit: publicProcedure.input(editIdea).mutation(async ({ ctx, input }) => {
+    }),
+  ),
+  create: protectedProcedure
+    .input(inputIdea)
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.idea.create({
+        data: {
+          title: input.title,
+          content: input.content,
+          creator: {
+            connectOrCreate: {
+              create: { id: input.creator },
+              where: { id: input.creator },
+            },
+          },
+        },
+      });
+    }),
+  edit: protectedProcedure.input(editIdea).mutation(async ({ ctx, input }) => {
     return ctx.db.idea.update({
       data: {
         title: input.title,
@@ -77,32 +93,45 @@ export const ideaRouter = createTRPCRouter({
       },
     });
   }),
-  upvote: publicProcedure.input(voteIdea).mutation(async ({ ctx, input }) => {
-    return ctx.db.idea.update({
-      data: {
-        upvoted: {
-          connect: input.users.map((id) => ({
-            id,
-          })),
+  delete: protectedProcedure
+    .input(z.number())
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.idea.delete({
+        where: {
+          id: input,
         },
-      },
-      where: {
-        id: input.id,
-      },
-    });
-  }),
-  downvote: publicProcedure.input(voteIdea).mutation(async ({ ctx, input }) => {
-    return ctx.db.idea.update({
-      data: {
-        upvoted: {
-          disconnect: input.users.map((id) => ({
-            id,
-          })),
+      });
+    }),
+  upvote: protectedProcedure
+    .input(voteIdea)
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.idea.update({
+        data: {
+          upvoted: {
+            connect: input.users.map((id) => ({
+              id,
+            })),
+          },
         },
-      },
-      where: {
-        id: input.id,
-      },
-    });
-  }),
+        where: {
+          id: input.id,
+        },
+      });
+    }),
+  downvote: protectedProcedure
+    .input(voteIdea)
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.idea.update({
+        data: {
+          upvoted: {
+            disconnect: input.users.map((id) => ({
+              id,
+            })),
+          },
+        },
+        where: {
+          id: input.id,
+        },
+      });
+    }),
 });

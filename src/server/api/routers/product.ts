@@ -2,11 +2,15 @@ import { type Prisma } from "@prisma/client";
 import { z } from "zod";
 import { cloudinaryUploader } from "~/app/utils/cloudinary";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 
 const inputProduct = z.object({
   id: z.string(),
-  type: z.enum(["PRODUCT", "AGENCY", "PROTOTYPE", "INNERSOURCE"]),
+  type: z.enum(["PRODUCT", "AGENCY", "DEVTOOL", "INNERSOURCE", "PROTOTYPE"]),
   name: z.string().min(1).max(32),
   oneLiner: z.string(),
   summary: z.string(),
@@ -47,6 +51,13 @@ export type Product = Prisma.ProductGetPayload<{
   };
 }>;
 
+export type ProductSummary = Prisma.ProductGetPayload<{
+  include: {
+    logo: true;
+    cover: true;
+  };
+}>;
+
 export const productRouter = createTRPCRouter({
   get: publicProcedure
     .input(z.object({ id: z.string() }))
@@ -63,6 +74,13 @@ export const productRouter = createTRPCRouter({
         },
       }),
     ),
+  getMetadata: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) =>
+      ctx.db.product.findFirst({
+        where: { id: input.id },
+      }),
+    ),
   getAll: publicProcedure.query(async ({ ctx }) =>
     ctx.db.product.findMany({
       include: {
@@ -71,7 +89,7 @@ export const productRouter = createTRPCRouter({
       },
     }),
   ),
-  create: publicProcedure
+  create: protectedProcedure
     .input(inputProduct)
     .mutation(async ({ ctx, input }) => {
       return Promise.all([
@@ -104,11 +122,14 @@ export const productRouter = createTRPCRouter({
             changelogs: {
               create: input.changelogs,
             },
+            contacts: {
+              create: input.contacts,
+            },
             admins: {
               connectOrCreate: input.admins.map((admin) => {
                 return {
-                  create: { clerkUserId: admin },
-                  where: { clerkUserId: admin },
+                  create: { id: admin },
+                  where: { id: admin },
                 };
               }),
             },
@@ -136,17 +157,19 @@ export const productRouter = createTRPCRouter({
         });
       });
     }),
-  update: publicProcedure.input(inputProduct).mutation(async ({ ctx, input }) =>
-    ctx.db.product.update({
-      data: {
-        id: input.id,
-        name: input.name,
-        summary: input.summary,
-      },
-      where: { id: input.id },
-    }),
-  ),
-  delete: publicProcedure
+  update: protectedProcedure
+    .input(inputProduct)
+    .mutation(async ({ ctx, input }) =>
+      ctx.db.product.update({
+        data: {
+          id: input.id,
+          name: input.name,
+          summary: input.summary,
+        },
+        where: { id: input.id },
+      }),
+    ),
+  delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const deleteFeatures = ctx.db.feature.deleteMany({

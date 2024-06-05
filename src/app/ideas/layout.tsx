@@ -1,7 +1,7 @@
 import { type ReactNode } from "react";
 
 export const metadata = {
-  title: "Create New",
+  title: "Ideas Platform",
 };
 
 export default function ClientLayout({ children }: { children: ReactNode }) {
