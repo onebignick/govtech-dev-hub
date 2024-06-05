@@ -11,7 +11,6 @@ export default function GuideAdmin() {
   const createCategoriesMutation = api.category.create.useMutation({
     onSuccess() {
       utils.category.invalidate().catch((error) => console.log(error));
-      close();
     },
   });
   return (

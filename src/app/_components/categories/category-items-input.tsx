@@ -39,10 +39,13 @@ function CategoryItemInput({
       <NativeSelect
         withAsterisk
         key={form.key(`${rootPath}.${itemIndex}.product`)}
-        data={products.map((product) => ({
-          label: product.name,
-          value: product.id,
-        }))}
+        data={[
+          { label: "", value: "" },
+          ...products.map((product) => ({
+            label: product.name,
+            value: product.id,
+          })),
+        ]}
         {...form.getInputProps(`${rootPath}.${itemIndex}.product`)}
       />
       <ActionIcon
@@ -91,6 +94,7 @@ export function CategoryItemsInput({
           key={`${rootPath}.${itemIndex}`}
           form={form}
           categoryIndex={categoryIndex}
+          subCategoryIndex={subCategoryIndex}
           itemIndex={itemIndex}
         />
       ))}

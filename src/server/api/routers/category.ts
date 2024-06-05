@@ -46,30 +46,43 @@ export const categoryRouter = createTRPCRouter({
   create: publicProcedure
     .input(inputCategories)
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.productCategory.createMany({
-        data: input.categories.map((category) => {
-          const id = category.name.toLowerCase().trim().replace(" ", "-");
-          return {
-            id,
-            name: category.name,
-            description: category.description,
-            children: {
-              data: {
-                create: category.children,
+      return Promise.all(
+        input.categories.map((category) =>
+          ctx.db.productCategory.create({
+            data: {
+              id: category.name.toLowerCase().trim().replace(" ", "-"),
+              name: category.name,
+              description: category.description,
+              children: {
+                create: category.children.map((child) => ({
+                  id: child.name.toLowerCase().trim().replace(" ", "-"),
+                  name: child.name,
+                  description: child.description,
+                  items: {
+                    create: child.items.map((item) => ({
+                      label: item.label,
+                      product: {
+                        connect: {
+                          id: item.product,
+                        },
+                      },
+                    })),
+                  },
+                })),
+              },
+              items: {
+                create: category.items.map((item) => ({
+                  label: item.label,
+                  product: {
+                    connect: {
+                      id: item.product,
+                    },
+                  },
+                })),
               },
             },
-            items: category.items.map((item) => ({
-              data: {
-                label: item.label,
-                product: {
-                  connect: {
-                    id: item.product,
-                  },
-                },
-              },
-            })),
-          };
-        }),
-      });
+          }),
+        ),
+      );
     }),
 });
