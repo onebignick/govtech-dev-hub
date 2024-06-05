@@ -33,7 +33,6 @@ export default function AdminEditProduct({
             alt={`Cover for ${blogPost.title}`}
             my="lg"
           />
-
           <Badge
             variant="gradient"
             gradient={{ from: "violet", to: "indigo", deg: 90 }}
