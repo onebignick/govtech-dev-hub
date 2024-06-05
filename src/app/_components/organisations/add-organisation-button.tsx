@@ -32,14 +32,9 @@ export default function AddOrganisationButton() {
         </Text>
         <OrganisationForm
           submitForm={(values) => {
-            createOrganisationMutation.mutate(
-              {
-                ...values,
-              },
-              {
-                onError: (error) => console.log(error),
-              },
-            );
+            createOrganisationMutation.mutate(values, {
+              onError: (error) => console.log(error),
+            });
           }}
         />
       </Modal>

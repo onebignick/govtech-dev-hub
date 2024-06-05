@@ -1,7 +1,11 @@
 import { type Prisma } from "@prisma/client";
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 
 const inputCategoryItem = z.object({
   label: z.string().min(1),
@@ -58,14 +62,7 @@ export const categoryRouter = createTRPCRouter({
       },
     }),
   ),
-  getForForm: publicProcedure.query(async ({ ctx }) =>
-    ctx.db.productCategory.findMany({
-      where: {
-        parentID: null,
-      },
-    }),
-  ),
-  create: publicProcedure
+  create: protectedProcedure
     .input(inputCategories)
     .mutation(async ({ ctx, input }) => {
       return ctx.db.$transaction([

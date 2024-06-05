@@ -67,7 +67,7 @@ function ProductCategoryDisplay({ category }: { category: ProductCategory }) {
             <Text>{subCategory.description}</Text>
           )}
           {subCategory.items.length > 0 && subCategory.statement && (
-            <Text c="white" size="xl">
+            <Text c="white" size="lg">
               {subCategory.statement}
             </Text>
           )}

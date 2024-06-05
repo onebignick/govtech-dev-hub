@@ -143,16 +143,18 @@ export const productRouter = createTRPCRouter({
         });
       });
     }),
-  update: publicProcedure.input(inputProduct).mutation(async ({ ctx, input }) =>
-    ctx.db.product.update({
-      data: {
-        id: input.id,
-        name: input.name,
-        summary: input.summary,
-      },
-      where: { id: input.id },
-    }),
-  ),
+  update: protectedProcedure
+    .input(inputProduct)
+    .mutation(async ({ ctx, input }) =>
+      ctx.db.product.update({
+        data: {
+          id: input.id,
+          name: input.name,
+          summary: input.summary,
+        },
+        where: { id: input.id },
+      }),
+    ),
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
