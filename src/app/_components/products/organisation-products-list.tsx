@@ -1,14 +1,31 @@
 "use client";
 
-import { Stack, Group, Title, Button, SegmentedControl } from "@mantine/core";
-import { IconPlus } from "@tabler/icons-react";
+import {
+  Stack,
+  Group,
+  Title,
+  Button,
+  SegmentedControl,
+  Menu,
+  UnstyledButton,
+} from "@mantine/core";
+import { IconChevronDown, IconPlus } from "@tabler/icons-react";
 import Link from "next/link";
 import { navLinks } from "../shell";
 import { ProductCardsGrid } from "./product-cards-grid";
 import classes from "~/styles/title.module.css";
+import selectClasses from "~/styles/select.module.css";
 import segmentedClasses from "~/styles/segmented.module.css";
 import { type OrganisationProducts } from "~/server/api/routers/organisation";
 import { useState } from "react";
+
+const types = [
+  { label: "Govt Product", value: "PRODUCT" },
+  { label: "Agency Project", value: "AGENCY" },
+  { label: "Development Tool", value: "DEVTOOL" },
+  { label: "Innersource Project", value: "INNERSOURCE" },
+  { label: "Prototype", value: "PROTOTYPE" },
+];
 
 export function OrganisationProductsList({
   organisations,
@@ -16,22 +33,55 @@ export function OrganisationProductsList({
   organisations: OrganisationProducts[];
 }) {
   const [type, setType] = useState("PRODUCT");
+  const [opened, setOpened] = useState(false);
 
   return (
     <Stack>
       <SegmentedControl
+        visibleFrom="sm"
         radius="xl"
         size="md"
-        data={[
-          { label: "Govt Product", value: "PRODUCT" },
-          { label: "Agency Project", value: "AGENCY" },
-          { label: "Development Tool", value: "DEVTOOL" },
-          { label: "Innersource Project", value: "INNERSOURCE" },
-          { label: "Prototype", value: "PROTOTYPE" },
-        ]}
+        data={types}
         onChange={(value) => setType(value)}
         classNames={segmentedClasses}
       />
+
+      <Menu
+        onOpen={() => setOpened(true)}
+        onClose={() => setOpened(false)}
+        radius="md"
+        width="target"
+        withinPortal
+      >
+        <Menu.Target>
+          <UnstyledButton
+            hiddenFrom="sm"
+            className={selectClasses.control}
+            data-expanded={opened || undefined}
+          >
+            <Group gap="xs">
+              <span className={selectClasses.label}>
+                {types.filter((typeObj) => typeObj.value === type)[0]?.label}
+              </span>
+            </Group>
+            <IconChevronDown
+              size="1rem"
+              className={selectClasses.icon}
+              stroke={1.5}
+            />
+          </UnstyledButton>
+        </Menu.Target>
+        <Menu.Dropdown>
+          {types.map((typeObj) => (
+            <Menu.Item
+              onClick={() => setType(typeObj.value)}
+              key={typeObj.label}
+            >
+              {typeObj.label}
+            </Menu.Item>
+          ))}
+        </Menu.Dropdown>
+      </Menu>
       <Group justify="space-between" mb="md">
         <Title order={1} c="white" className={classes.titleUnderline}>
           GovTech Products
@@ -64,7 +114,7 @@ export function OrganisationProductsList({
         }
 
         return (
-          <Stack key={organisation.id}>
+          <Stack key={`${organisation.id}-${type}`}>
             <Title
               order={2}
               c="white"
@@ -94,15 +144,12 @@ export function OrganisationProductsList({
                 }
 
                 return (
-                  <>
-                    <Title key={childOrg.id + "-name"} order={3} c="white">
+                  <Stack key={childOrg.id + type}>
+                    <Title order={3} c="white">
                       {childOrg.name}
                     </Title>
-                    <ProductCardsGrid
-                      key={childOrg.id + "-grid"}
-                      products={childOrgProducts}
-                    />
-                  </>
+                    <ProductCardsGrid products={childOrgProducts} />
+                  </Stack>
                 );
               })}
             </Stack>
