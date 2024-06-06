@@ -77,6 +77,7 @@ export function ProductPage({ product }: { product: Product }) {
           <Title c="white" order={1} className={titleClasses.titleUnderline}>
             {product.name}
           </Title>
+          <Text>{`by ${product.organisation?.name}`}</Text>
         </Stack>
         {product.admins.findIndex((admin) => admin.id === auth.userId) !==
           -1 && (
@@ -111,7 +112,7 @@ export function ProductPage({ product }: { product: Product }) {
         </Group>
       )}
       {product.contacts.length > 0 && (
-        <Flex>
+        <Flex gap="md">
           {product.contacts?.map((contact) => (
             <ProductContactCard key={contact.id} contact={contact} />
           ))}

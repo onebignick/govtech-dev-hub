@@ -29,6 +29,7 @@ export function ProductCardsGrid({ products }: { products: ProductSummary[] }) {
           fw={900}
           c="white"
           className={titleClasses.titleUnderline}
+          ta="center"
         >
           {product.name}
         </Text>
