@@ -13,14 +13,12 @@ export function IdeaVotesDisplay({ idea }: { idea: Idea }) {
   const upvoteIdeaMutation = api.idea.upvote.useMutation({
     onSuccess() {
       utils.idea.invalidate().catch((error) => console.log(error));
-      close();
     },
   });
 
   const downvoteIdeaMutation = api.idea.downvote.useMutation({
     onSuccess() {
       utils.idea.invalidate().catch((error) => console.log(error));
-      close();
     },
   });
 
