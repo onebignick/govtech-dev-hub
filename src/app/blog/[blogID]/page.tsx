@@ -30,7 +30,6 @@ export default async function BlogPost({
         })
         .catch((error) => console.log(error))
         .then((blogPost) => {
-          console.log(blogPost);
           return blogPost ? <BlogPostDisplay blogPost={blogPost} /> : null;
         })}
     </Suspense>
