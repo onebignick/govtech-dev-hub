@@ -28,9 +28,11 @@ export default async function BlogPost({
         .get({
           id: decodeURI(params.blogID),
         })
-        .then((blogPost) =>
-          blogPost ? <BlogPostDisplay blogPost={blogPost} /> : null,
-        )}
+        .catch((error) => console.log(error))
+        .then((blogPost) => {
+          console.log(blogPost);
+          return blogPost ? <BlogPostDisplay blogPost={blogPost} /> : null;
+        })}
     </Suspense>
   );
 }
