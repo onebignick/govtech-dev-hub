@@ -11,7 +11,11 @@ export default async function BlogPosts() {
   return (
     <Suspense fallback={<LoaderShell />}>
       {api.blogPost.getAll().then((blogPosts) => (
-        <BlogPostList blogPosts={blogPosts} />
+        <BlogPostList
+          blogPosts={blogPosts.sort((a, b) =>
+            a.createdAt > b.createdAt ? -1 : 0,
+          )}
+        />
       ))}
     </Suspense>
   );

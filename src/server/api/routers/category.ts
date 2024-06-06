@@ -80,7 +80,7 @@ export const categoryRouter = createTRPCRouter({
                   name: child.name,
                   description: child.description,
                   items: {
-                    create: child.items.map((item) => ({
+                    create: child.items.reverse().map((item) => ({
                       label: item.label,
                       product: {
                         connect: {
@@ -92,7 +92,7 @@ export const categoryRouter = createTRPCRouter({
                 })),
               },
               items: {
-                create: category.items.map((item) => ({
+                create: category.items.reverse().map((item) => ({
                   label: item.label,
                   product: {
                     connect: {

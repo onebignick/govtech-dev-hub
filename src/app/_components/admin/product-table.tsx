@@ -16,7 +16,7 @@ import Link from "next/link";
 import { api } from "~/trpc/react";
 import Shell, { navLinks } from "../shell";
 import titleClasses from "~/styles/title.module.css";
-import { type ProductSummary } from "~/server/api/routers/product";
+import { type ProductMetadata } from "~/server/api/routers/product";
 
 const typeColors: Record<string, string> = {
   PRODUCT: "blue",
@@ -26,7 +26,7 @@ const typeColors: Record<string, string> = {
   PROTOTYPE: "purple",
 };
 
-export function ProductsTable({ products }: { products: ProductSummary[] }) {
+export function ProductsTable({ products }: { products: ProductMetadata[] }) {
   const utils = api.useUtils();
   const deleteUserMutation = api.product.delete.useMutation({
     onSuccess() {

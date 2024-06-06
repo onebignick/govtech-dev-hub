@@ -1,12 +1,4 @@
-import {
-  Group,
-  Card,
-  Text,
-  Stack,
-  Title,
-  Avatar,
-  Divider,
-} from "@mantine/core";
+import { Group, Card, Text, Stack, Title, Image, Divider } from "@mantine/core";
 import { api } from "~/trpc/react";
 import cardClasses from "~/styles/card.module.css";
 import {
@@ -15,7 +7,6 @@ import {
 } from "~/server/api/routers/category";
 import Link from "next/link";
 import { navLinks } from "../shell";
-import { LoaderDisplay } from "../loader";
 
 function ProductListItem({ item }: { item: ProductCategoryItem }) {
   return (
@@ -31,7 +22,11 @@ function ProductListItem({ item }: { item: ProductCategoryItem }) {
           {item.label}
         </Text>
         <Group>
-          <Avatar src={item.product.logo.url} />
+          <Image
+            src={item.product.logo.url}
+            alt={`${item.product.name} - Logo`}
+            h="3vh"
+          />
           <Text size="md" c="white">
             {item.product.name}
           </Text>

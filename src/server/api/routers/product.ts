@@ -60,6 +60,13 @@ export type ProductSummary = Prisma.ProductGetPayload<{
   };
 }>;
 
+export type ProductMetadata = Prisma.ProductGetPayload<{
+  include: {
+    logo: true;
+    organisation: true;
+  };
+}>;
+
 export const productRouter = createTRPCRouter({
   get: publicProcedure
     .input(z.object({ id: z.string() }))

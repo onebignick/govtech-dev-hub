@@ -17,7 +17,11 @@ export function BlogPostPreviewCard({ blogPost }: { blogPost: BlogPost }) {
       shadow="xs"
     >
       <Card.Section>
-        <Image src={blogPost.cover!.url} alt={`Cover for ${blogPost.title}`} />
+        <Image
+          h="30vh"
+          src={blogPost.cover!.url}
+          alt={`Cover for ${blogPost.title}`}
+        />
       </Card.Section>
       <Stack mt="md">
         <Text size="2em" fw={900} c="white" mb={0} lh={1}>
