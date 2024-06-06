@@ -25,10 +25,18 @@ export function ProductOrganisationInput({
       description="GovTech Products & Agency Projects need to include the organisation"
       data={[
         { label: "", value: "" },
-        ...organisations.map((organisation) => ({
-          label: organisation.name,
-          value: organisation.id,
-        })),
+        ...organisations
+          .map((organisation) => [
+            {
+              label: organisation.name,
+              value: organisation.id,
+            },
+            ...organisation.children.map((subOrg) => ({
+              label: ` - ${subOrg.name}`,
+              value: subOrg.id,
+            })),
+          ])
+          .flat(1),
       ]}
       {...form.getInputProps("organisationId")}
     />

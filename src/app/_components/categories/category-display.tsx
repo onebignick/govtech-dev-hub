@@ -50,9 +50,11 @@ function ProductCategoryDisplay({ category }: { category: ProductCategory }) {
       {category.description && category.description?.length > 0 && (
         <Text>{category.description}</Text>
       )}
-      {category.items.length > 0 && category.statement && (
+      {category.items.length > 0 && (
         <Text c="white" size="xl">
-          {category.statement}
+          {category.statement && category.statement.length > 0
+            ? category.statement
+            : "I want to"}
         </Text>
       )}
       {category.items.map((item) => (
@@ -66,9 +68,11 @@ function ProductCategoryDisplay({ category }: { category: ProductCategory }) {
           {subCategory.description && subCategory.description?.length > 0 && (
             <Text>{subCategory.description}</Text>
           )}
-          {subCategory.items.length > 0 && subCategory.statement && (
-            <Text c="white" size="lg">
-              {subCategory.statement}
+          {subCategory.items.length > 0 && (
+            <Text c="white" size="xl">
+              {subCategory.statement && subCategory.statement.length > 0
+                ? subCategory.statement
+                : "I want to"}
             </Text>
           )}
           {subCategory.items.map((item) => (

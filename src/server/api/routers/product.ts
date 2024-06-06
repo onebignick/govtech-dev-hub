@@ -11,7 +11,7 @@ import {
 const inputProduct = z.object({
   id: z.string(),
   type: z.enum(["PRODUCT", "AGENCY", "DEVTOOL", "INNERSOURCE", "PROTOTYPE"]),
-  name: z.string().min(1).max(32),
+  name: z.string().min(1).max(64),
   oneLiner: z.string(),
   summary: z.string(),
   links: z.array(
@@ -57,8 +57,6 @@ export type Product = Prisma.ProductGetPayload<{
 export type ProductSummary = Prisma.ProductGetPayload<{
   include: {
     logo: true;
-    cover: true;
-    organisation: true;
   };
 }>;
 
@@ -140,7 +138,10 @@ export const productRouter = createTRPCRouter({
                 }
               : {},
             admins: {
-              connect: input.admins.map((admin) => ({ id: admin })),
+              connectOrCreate: input.admins.map((admin) => ({
+                create: { id: admin },
+                where: { id: admin },
+              })),
             },
             logo: {
               create: {

@@ -30,6 +30,14 @@ export type Organisation = Prisma.OrganisationGetPayload<{
   };
 }>;
 
+export type OrganisationProducts = Prisma.OrganisationGetPayload<{
+  include: {
+    logo: true;
+    children: { include: { products: { include: { logo: true } } } };
+    products: { include: { logo: true } };
+  };
+}>;
+
 export const organisationRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) =>
     ctx.db.organisation.findMany({
@@ -39,6 +47,26 @@ export const organisationRouter = createTRPCRouter({
       },
       where: {
         parentID: null,
+      },
+    }),
+  ),
+  getProducts: publicProcedure.query(async ({ ctx }) =>
+    ctx.db.organisation.findMany({
+      include: {
+        logo: true,
+        children: { include: { products: { include: { logo: true } } } },
+        products: { include: { logo: true } },
+      },
+      where: {
+        parentID: null,
+      },
+    }),
+  ),
+  getFlat: publicProcedure.query(async ({ ctx }) =>
+    ctx.db.organisation.findMany({
+      include: {
+        logo: true,
+        children: true,
       },
     }),
   ),

@@ -67,7 +67,7 @@ export function ProductForm({
             label="Type"
             description="Is it a full GovTech product? A one-time project for an agency? Or a cool Innersource package?"
             data={[
-              { label: "GovTech Product", value: "PRODUCT" },
+              { label: "Govt Product", value: "PRODUCT" },
               { label: "Agency Project", value: "AGENCY" },
               { label: "Development Tool", value: "DEVTOOL" },
               { label: "Innersource Project", value: "INNERSOURCE" },
