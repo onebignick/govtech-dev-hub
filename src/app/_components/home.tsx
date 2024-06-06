@@ -2,7 +2,7 @@
 
 import classes from "~/styles/home.module.css";
 import { Container, Text, Group, Button, Center } from "@mantine/core";
-import { useAuth } from "@clerk/nextjs";
+import { SignInButton, useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import { navLinks } from "./shell";
 
@@ -53,14 +53,16 @@ export default function HomePage() {
               Discover
             </Button>
           ) : (
-            <Button
-              size="xl"
-              className={classes.control}
-              variant="gradient"
-              gradient={{ from: "red", to: "yellow" }}
-            >
-              Login via TechPass
-            </Button>
+            <SignInButton>
+              <Button
+                size="xl"
+                className={classes.control}
+                variant="gradient"
+                gradient={{ from: "red", to: "yellow" }}
+              >
+                Login via TechPass
+              </Button>
+            </SignInButton>
           )}
         </Group>
       </Container>
